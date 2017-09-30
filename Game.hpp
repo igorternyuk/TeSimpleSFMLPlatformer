@@ -13,6 +13,7 @@
 #include <string>
 #include <memory>
 
+/**/
 class Game {
 public:
     explicit Game();
@@ -26,8 +27,8 @@ private:
     const std::string TITLE_OF_PROGRAM{"TeSimplePlatformer"};
     enum
     {
-        WINDOW_WIDTH = 40*32,
-        WINDOW_HEIGHT = 12*32,
+        WINDOW_WIDTH = 800,
+        WINDOW_HEIGHT = 600,
         TILE_SIZE = 32
     };
     const float FPS{60.f};
@@ -45,15 +46,26 @@ private:
         "X                                X     X",
         "X                                X     X",
         "X                                X     X",
-        "X         0000               XXXXX     X",
         "X                                X     X",
-        "XXX                              X     X",
+        "X                                X     X",
+        "XXXXXXXX                         X     X",
+        "X                                X     X",
+        "X                                X     X",
+        "X                                X     X",
+        "X                                X     X",
+        "X                                X     X",
+        "X                                X    0X",
+        "X                             0  X     X",
+        "X         0000               XXXXX     X",
+        "X 0                              X     X",
+        "XXX             0                X 0   X",
         "X              XX                XXX   X",
-        "X              XX                      X",
+        "X    0         XX         0            X",
         "X    X         XX        XXX           X",
         "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
     };
-    
+    float offsetX = 0;
+    float offsetY = 0;
     void processEvents();
     void updatePhase(float time);
     void renderPhase();

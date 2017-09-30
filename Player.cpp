@@ -9,7 +9,7 @@
 #include <iostream>
 
 Player::Player(int tileSize) :
-mVelX{0}, mVelY{0}, mCurrentFrame{0}, mBoundingRect{7 * 32, 9 * 32, 40, 50},
+mVelX{0}, mVelY{0}, mCurrentFrame{0}, mBoundingRect{2 * 32,6 * 32, 40, 50},
 mTileSize{tileSize}
 {
     mSprite.setPosition(7 * 32, 9 * 32);
@@ -27,7 +27,7 @@ Player::~Player()
 void Player::setTexture(sf::Texture &image)
 {
     mSprite.setTexture(image);
-    mSprite.setTextureRect({0, 244, 40, 50});
+    mSprite.setTextureRect({0, 244, mBoundingRect.width, mBoundingRect.height});
 }
 
 void Player::handleUserInput()
@@ -57,10 +57,10 @@ void Player::handleUserInput()
     }
 }
 
-void Player::update(float time, const std::vector<std::string> &map)
+void Player::update(float time, std::vector<std::string> &map)
 {
     mBoundingRect.left += mVelX * time;
-    handleCollision(Direction::X, map);
+    handleCollision(true, map);
 
     if (!mIsOnGround)
     {
@@ -70,7 +70,7 @@ void Player::update(float time, const std::vector<std::string> &map)
     mBoundingRect.top += mVelY * time;
     
     mIsOnGround = false;
-    handleCollision(Direction::Y, map);
+    handleCollision(false, map);
 
     //Animation
 
@@ -96,16 +96,16 @@ void Player::update(float time, const std::vector<std::string> &map)
     }
     //If player touches ground
 
-    mSprite.setPosition(mBoundingRect.left, mBoundingRect.top);
     mVelX = 0;
 }
 
-void Player::draw(sf::RenderWindow &window) const
-{
+void Player::draw(sf::RenderWindow &window, float offsetX, float offsetY)
+{    
+    mSprite.setPosition(mBoundingRect.left - offsetX, mBoundingRect.top - offsetY);
     window.draw(mSprite);
 }
 
-void Player::handleCollision(Direction dir, const std::vector<std::string> &map)
+void Player::handleCollision(bool isAxisX, std::vector<std::string> &map)
 {
     for (int y = mBoundingRect.top / mTileSize;
             y < (mBoundingRect.top + mBoundingRect.height) / mTileSize; ++y)
@@ -117,7 +117,7 @@ void Player::handleCollision(Direction dir, const std::vector<std::string> &map)
             std::cout << "map[y][x] == 'X' - > " << (map[y][x] == 'X') << std::endl;
             if (map[y][x] == 'X')
             {
-                if (dir == Direction::X)
+                if (isAxisX)
                 {
                     if (mVelX > 0)
                         mBoundingRect.left = x * mTileSize - mBoundingRect.width;
@@ -139,6 +139,10 @@ void Player::handleCollision(Direction dir, const std::vector<std::string> &map)
                     }
                 }
                 break;
+            }
+            else if(map[y][x] == '0')
+            {
+                map[y][x] = ' ';
             }
         }
     }

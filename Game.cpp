@@ -55,13 +55,24 @@ void Game::processEvents()
 void Game::updatePhase(float time)
 {
     mPlayer->update(time, mMap);
+    //Camera
+    if(mPlayer->getX() > WINDOW_WIDTH / 2 &&
+            mPlayer->getX() < mMap[0].size() * TILE_SIZE - WINDOW_WIDTH / 2 )
+    {
+        offsetX = mPlayer->getX() - WINDOW_WIDTH / 2;
+    }
+    if(mPlayer->getY() > WINDOW_HEIGHT / 2 &&
+            mPlayer->getY() < mMap.size() * TILE_SIZE - WINDOW_HEIGHT / 2 )
+    {
+        offsetY = mPlayer->getY() - WINDOW_HEIGHT / 2;
+    }
 }
 
 void Game::renderPhase()
 {
     mWindow.clear(sf::Color::Cyan);
     drawMap();
-    mPlayer->draw(mWindow);
+    mPlayer->draw(mWindow, offsetX, offsetY);
     mWindow.display();
 }
 
@@ -81,7 +92,7 @@ void Game::drawMap()
             }
             else
                 continue;
-            mBlock.setPosition(x * TILE_SIZE, y * TILE_SIZE);
+            mBlock.setPosition(x * TILE_SIZE - offsetX, y * TILE_SIZE - offsetY);
             mWindow.draw(mBlock);
         }
     }

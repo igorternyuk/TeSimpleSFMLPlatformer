@@ -24,11 +24,12 @@ public:
     inline float getY() const noexcept { return mBoundingRect.top; }
     void setTexture(sf::Texture &image);
     void handleUserInput();
-    void update(float time, const std::vector<std::string> &map);
-    void draw(sf::RenderWindow &window) const;
+    void update(float time, std::vector<std::string> &map);
+    void draw(sf::RenderWindow &window, float offsetX, float offsetY);
 private:
     enum class Direction{X, Y};
-    void handleCollision(Direction dir, const std::vector<std::string> &map);
+    bool isAxisXCollsiionsCheck = true;
+    void handleCollision(bool isAxisX, std::vector<std::string> &map);
     float mVelX, mVelY;
     float mCurrentFrame;
     sf::FloatRect mBoundingRect;
