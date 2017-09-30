@@ -35,10 +35,11 @@ private:
     int mTileSize;
     sf::Sprite mSprite;
     bool mIsOnGround = false;
-    const float VELOCITY = 0.1;
-    const float JUMP_VELOCITY = -1.0;
-    const float GRAVITY = 0.0025;
-    const float ANIMATION_SPEED = 0.005;
+    bool isLastDirRight = true;
+    const float VELOCITY = 90;
+    const float JUMP_VELOCITY = -230.0;
+    const float GRAVITY = 200;
+    const float ANIMATION_SPEED = 6;
 
 };
 

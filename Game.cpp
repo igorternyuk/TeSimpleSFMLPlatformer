@@ -23,17 +23,23 @@ Game::~Game() {
 void Game::run()
 {
     sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
     
     while (mWindow.isOpen())
     {
-        float time = clock.restart().asMilliseconds();
-        inputPhase();
-        updatePhase(time);
-        drawingPhase();
+        processEvents();        
+        timeSinceLastUpdate += clock.restart();
+        while(timeSinceLastUpdate > mTimePerFrame)
+        {
+            timeSinceLastUpdate -= mTimePerFrame;
+            processEvents();
+            updatePhase(mTimePerFrame.asSeconds());
+        }
+        renderPhase();
     }
 }
 
-void Game::inputPhase()
+void Game::processEvents()
 {
     sf::Event event;
     while (mWindow.pollEvent(event))
@@ -51,7 +57,7 @@ void Game::updatePhase(float time)
     mPlayer->update(time, mMap);
 }
 
-void Game::drawingPhase()
+void Game::renderPhase()
 {
     mWindow.clear(sf::Color::Cyan);
     drawMap();

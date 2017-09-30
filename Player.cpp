@@ -9,9 +9,10 @@
 #include <iostream>
 
 Player::Player(int tileSize) :
-mVelX{0}, mVelY{0}, mCurrentFrame{0}, mBoundingRect{40, 200, 40, 50},
+mVelX{0}, mVelY{0}, mCurrentFrame{0}, mBoundingRect{7 * 32, 9 * 32, 40, 50},
 mTileSize{tileSize}
 {
+    mSprite.setPosition(7 * 32, 9 * 32);
 }
 
 Player::Player(sf::Texture &image, int tileSize) : Player(tileSize)
@@ -60,31 +61,41 @@ void Player::update(float time, const std::vector<std::string> &map)
 {
     mBoundingRect.left += mVelX * time;
     handleCollision(Direction::X, map);
-    handleCollision(Direction::Y, map);
+
     if (!mIsOnGround)
     {
         mVelY += GRAVITY * time;
     }
+
     mBoundingRect.top += mVelY * time;
+    
+    mIsOnGround = false;
+    handleCollision(Direction::Y, map);
 
     //Animation
+
     mCurrentFrame += ANIMATION_SPEED * time;
     if (mCurrentFrame > 6) mCurrentFrame = 0;
-    mSprite.move(mVelX * time, 0);
-    if (mVelX > 0)
-        mSprite.setTextureRect({40 * int(mCurrentFrame), 244, 40, 50});
-    if (mVelX < 0)
-        mSprite.setTextureRect({40 * int(mCurrentFrame) + 40, 244, -40, 50});
-    //If player touches ground
-    if (!mIsOnGround && mBoundingRect.top + mBoundingRect.height >= 600)
+    if(mVelX == 0)
     {
-        std::cout << "is on ground = " << mIsOnGround << std::endl;
-        std::cout << "Player has touch the ground";
-        mIsOnGround = true;
-        std::cout << "is on ground = " << mIsOnGround << std::endl;
-        mVelY = 0;
-        mBoundingRect.top = 12 * mTileSize - mBoundingRect.height;
+        mCurrentFrame = 0;
+        if(isLastDirRight)
+            mSprite.setTextureRect({40 * int(mCurrentFrame), 244, 40, 50});
+        else
+            mSprite.setTextureRect({40 * int(mCurrentFrame) + 40, 244, -40, 50});
+    } 
+    else if (mVelX > 0)
+    {
+        mSprite.setTextureRect({40 * int(mCurrentFrame), 244, 40, 50});
+        isLastDirRight = true;
     }
+    else
+    {
+        mSprite.setTextureRect({40 * int(mCurrentFrame) + 40, 244, -40, 50});
+        isLastDirRight = false;
+    }
+    //If player touches ground
+
     mSprite.setPosition(mBoundingRect.left, mBoundingRect.top);
     mVelX = 0;
 }
@@ -96,40 +107,38 @@ void Player::draw(sf::RenderWindow &window) const
 
 void Player::handleCollision(Direction dir, const std::vector<std::string> &map)
 {
-    std::cout << "Handle collisions map.size = " << map.size() << std::endl;
-    int tx = (mBoundingRect.left + mBoundingRect.width) / mTileSize;
-    int ty = (mBoundingRect.top + mBoundingRect.height) / mTileSize;
-    std::cout << "tx = " << tx << " ty = " << ty << std::endl;
-    for (int y = mBoundingRect.top / mTileSize; y < ty; ++y)
+    for (int y = mBoundingRect.top / mTileSize;
+            y < (mBoundingRect.top + mBoundingRect.height) / mTileSize; ++y)
     {
-        for (int x = mBoundingRect.top / mTileSize; x < tx; ++x)
+        for (int x = mBoundingRect.left / mTileSize;
+                x < (mBoundingRect.left + mBoundingRect.width) / mTileSize; ++x)
         {
+            std::cout << "x = " << x << " y = " << y << std::endl;
+            std::cout << "map[y][x] == 'X' - > " << (map[y][x] == 'X') << std::endl;
             if (map[y][x] == 'X')
             {
-                std::cout << "CollisionX" << std::endl;
                 if (dir == Direction::X)
                 {
-                    if (mVelY > 0)
-                    {
+                    if (mVelX > 0)
                         mBoundingRect.left = x * mTileSize - mBoundingRect.width;
-                        mIsOnGround = true;
-                    }
-                    if (mVelY < 0)
-                    {
+                    if (mVelX < 0)
                         mBoundingRect.left = x * mTileSize + mTileSize;
-                    }
                 }
                 else
                 {
                     if (mVelY > 0)
                     {
-                        mBoundingRect.left = y * mTileSize - mBoundingRect.height;
+                        mBoundingRect.top = y * mTileSize - mBoundingRect.height;
+                        mVelY = 0;
+                        mIsOnGround = true;
                     }
                     if (mVelY < 0)
                     {
                         mBoundingRect.top = y * mTileSize + mTileSize;
+                        mVelY = 0;
                     }
                 }
+                break;
             }
         }
     }

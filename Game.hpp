@@ -30,7 +30,8 @@ private:
         WINDOW_HEIGHT = 12*32,
         TILE_SIZE = 32
     };
-
+    const float FPS{60.f};
+    const sf::Time mTimePerFrame{sf::seconds(1 / FPS)};
     std::unique_ptr<Player> mPlayer;
     sf::RenderWindow mWindow;
     sf::RectangleShape mBlock;
@@ -53,9 +54,9 @@ private:
         "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
     };
     
-    void inputPhase();
+    void processEvents();
     void updatePhase(float time);
-    void drawingPhase();
+    void renderPhase();
     void drawMap();
 };
 
