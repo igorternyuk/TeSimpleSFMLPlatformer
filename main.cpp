@@ -14,7 +14,7 @@ int main()
     try
     {
         Game game;
-        game.run();
+        game.gameLoop();
     }
     catch(std::exception &e)
     {

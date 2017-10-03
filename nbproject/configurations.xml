@@ -4,25 +4,40 @@
     <logicalFolder name="SourceFiles"
                    displayName="Исходные файлы"
                    projectFiles="true">
+      <itemPath>components/CAnimation.cpp</itemPath>
+      <itemPath>components/CPhysics.cpp</itemPath>
+      <itemPath>components/CPlayerControl.cpp</itemPath>
+      <itemPath>components/CPosition.cpp</itemPath>
       <itemPath>Game.cpp</itemPath>
-      <itemPath>MapManager.cpp</itemPath>
+      <itemPath>MainMenu.cpp</itemPath>
+      <itemPath>Map.cpp</itemPath>
       <itemPath>Player.cpp</itemPath>
+      <itemPath>SplashScreen.cpp</itemPath>
+      <itemPath>composition.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Файлы заголовков"
                    projectFiles="true">
+      <itemPath>components/CAnimation.hpp</itemPath>
+      <itemPath>components/CPhysics.hpp</itemPath>
+      <itemPath>components/CPlayerControl.hpp</itemPath>
+      <itemPath>components/CPosition.hpp</itemPath>
       <itemPath>Game.hpp</itemPath>
-      <itemPath>IDrawableEntity.hpp</itemPath>
-      <itemPath>MapManager.hpp</itemPath>
+      <itemPath>MainMenu.hpp</itemPath>
+      <itemPath>Map.hpp</itemPath>
       <itemPath>Player.hpp</itemPath>
+      <itemPath>ResourceManager.hpp</itemPath>
+      <itemPath>SplashScreen.hpp</itemPath>
+      <itemPath>composition.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Файлы ресурсов"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="resources" projectFiles="true">
+      <logicalFolder name="f2" displayName="Resources" projectFiles="true">
         <itemPath>resources/fonts</itemPath>
         <itemPath>resources/gfx</itemPath>
+        <itemPath>resources/levels</itemPath>
         <itemPath>resources/sounds</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -48,6 +63,8 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <standard>11</standard>
+          <commandlineTool>g++</commandlineTool>
           <commandLine>-std=c++17</commandLine>
         </ccTool>
         <linkerTool>
@@ -60,21 +77,51 @@
       </item>
       <item path="Game.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="IDrawableEntity.hpp" ex="false" tool="3" flavor2="0">
+      <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MapManager.cpp" ex="false" tool="1" flavor2="0">
+      <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MapManager.hpp" ex="false" tool="3" flavor2="0">
+      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Map.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Player.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Player.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SplashScreen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SplashScreen.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CAnimation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CAnimation.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPhysics.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPhysics.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPlayerControl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPlayerControl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPosition.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPosition.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="composition.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="composition.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="resources/fonts" ex="false" tool="3" flavor2="0">
       </item>
       <item path="resources/gfx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="resources/levels" ex="false" tool="3" flavor2="0">
       </item>
       <item path="resources/sounds" ex="false" tool="3" flavor2="0">
       </item>
@@ -105,21 +152,51 @@
       </item>
       <item path="Game.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="IDrawableEntity.hpp" ex="false" tool="3" flavor2="0">
+      <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="MapManager.cpp" ex="false" tool="1" flavor2="0">
+      <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MapManager.hpp" ex="false" tool="3" flavor2="0">
+      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Map.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Player.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Player.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SplashScreen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SplashScreen.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CAnimation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CAnimation.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPhysics.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPhysics.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPlayerControl.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPlayerControl.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CPosition.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CPosition.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="composition.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="composition.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="resources/fonts" ex="false" tool="3" flavor2="0">
       </item>
       <item path="resources/gfx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="resources/levels" ex="false" tool="3" flavor2="0">
       </item>
       <item path="resources/sounds" ex="false" tool="3" flavor2="0">
       </item>

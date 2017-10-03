@@ -5,4 +5,25 @@
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Entity.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/composition.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Map.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Enemy.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Entity.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Enemy.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/components/CPhycics.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Game.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Player.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Game.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/composition.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/components/CPhycics.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/ResourceManager.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/components/CPosition.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/components/CPosition.hpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/main.cpp</file>
+            <file>file:/home/igor/prj/cpp/sfml/TeSimplePlatformer/Player.cpp</file>
+        </group>
+    </open-files>
 </project-private>

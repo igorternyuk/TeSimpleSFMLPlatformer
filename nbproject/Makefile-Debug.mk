@@ -36,8 +36,15 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Game.o \
-	${OBJECTDIR}/MapManager.o \
+	${OBJECTDIR}/MainMenu.o \
+	${OBJECTDIR}/Map.o \
 	${OBJECTDIR}/Player.o \
+	${OBJECTDIR}/SplashScreen.o \
+	${OBJECTDIR}/components/CAnimation.o \
+	${OBJECTDIR}/components/CPhysics.o \
+	${OBJECTDIR}/components/CPlayerControl.o \
+	${OBJECTDIR}/components/CPosition.o \
+	${OBJECTDIR}/composition.o \
 	${OBJECTDIR}/main.o
 
 
@@ -68,22 +75,57 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/tesimpleplatformer: ${OBJECTFILES}
 ${OBJECTDIR}/Game.o: Game.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Game.o Game.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Game.o Game.cpp
 
-${OBJECTDIR}/MapManager.o: MapManager.cpp
+${OBJECTDIR}/MainMenu.o: MainMenu.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MapManager.o MapManager.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MainMenu.o MainMenu.cpp
+
+${OBJECTDIR}/Map.o: Map.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Map.o Map.cpp
 
 ${OBJECTDIR}/Player.o: Player.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Player.o Player.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Player.o Player.cpp
+
+${OBJECTDIR}/SplashScreen.o: SplashScreen.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SplashScreen.o SplashScreen.cpp
+
+${OBJECTDIR}/components/CAnimation.o: components/CAnimation.cpp
+	${MKDIR} -p ${OBJECTDIR}/components
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CAnimation.o components/CAnimation.cpp
+
+${OBJECTDIR}/components/CPhysics.o: components/CPhysics.cpp
+	${MKDIR} -p ${OBJECTDIR}/components
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CPhysics.o components/CPhysics.cpp
+
+${OBJECTDIR}/components/CPlayerControl.o: components/CPlayerControl.cpp
+	${MKDIR} -p ${OBJECTDIR}/components
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CPlayerControl.o components/CPlayerControl.cpp
+
+${OBJECTDIR}/components/CPosition.o: components/CPosition.cpp
+	${MKDIR} -p ${OBJECTDIR}/components
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CPosition.o components/CPosition.cpp
+
+${OBJECTDIR}/composition.o: composition.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/composition.o composition.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

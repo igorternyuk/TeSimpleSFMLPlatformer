@@ -8,18 +8,19 @@
 #include "Player.hpp"
 #include <iostream>
 
-Player::Player(int tileSize) :
-mVelX{0}, mVelY{0}, mCurrentFrame{0}, mBoundingRect{2 * 32,6 * 32, 40, 50},
+/*  sf::Sprite mSprite;
+    float mVelocity;
+    float mJumpVelocity;
+    int mTileSize*/
+
+Player::Player(sf::Texture &image, const sf::IntRect &tRect,
+               float velocity, float jumpVelocity, int posOnSpriteSetX = 0,
+               int posOnSpriteSetY = 0, int tileSize = 32):
+mSprite(image, tRect), mVelocity{velocity}, mJumpVelocity{jumpVelocity},
 mTileSize{tileSize}
 {
-    mSprite.setPosition(7 * 32, 9 * 32);
+    mSprite.setPosition(posOnSpriteSetX, posOnSpriteSetY);
 }
-
-Player::Player(sf::Texture &image, int tileSize) : Player(tileSize)
-{
-    mSprite.setTexture(image);
-}
-
 Player::~Player()
 {
 }
@@ -27,22 +28,25 @@ Player::~Player()
 void Player::setTexture(sf::Texture &image)
 {
     mSprite.setTexture(image);
-    mSprite.setTextureRect({0, 244, mBoundingRect.width, mBoundingRect.height});
+}
+
+void Player::setTexture(sf::Texture &image, int posOnSpriteSetX,
+                    int posOnSpriteSetY)
+{
+    mSprite.setTexture(image);
+    mSprite.setTextureRect({posOnSpriteSetX, posOnSpriteSetY,
+            mBoundingRect.width, mBoundingRect.height});
 }
 
 void Player::handleUserInput()
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        mVelX = -VELOCITY;
+        mVel.x = -mVelocity;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        mVelX = VELOCITY;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-
+        mVel.x = mVelocity;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -51,7 +55,7 @@ void Player::handleUserInput()
         if (mIsOnGround)
         {
             //Player can jump only from ground
-            mVelY = JUMP_VELOCITY;
+            mVel.y = mJumpVelocity;
             mIsOnGround = false;
         }
     }
@@ -59,83 +63,89 @@ void Player::handleUserInput()
 
 void Player::update(float time, std::vector<std::string> &map)
 {
-    mBoundingRect.left += mVelX * time;
-    handleCollision(true, map);
+    //mBoundingRect.left += mVel.x * time;
+    mSprite.move(mVel.x * time, 0);
+    handleCollisionWithMapObjects(map);
 
     if (!mIsOnGround)
     {
-        mVelY += GRAVITY * time;
+        mVel.y += GRAVITY * time;
     }
 
-    mBoundingRect.top += mVelY * time;
+    //mBoundingRect.top += mVel.y * time;
+    mSprite.move(0, mVel.y * time);
     
     mIsOnGround = false;
-    handleCollision(false, map);
+    handleCollisionWithMapObjects(false, map);
 
     //Animation
 
     mCurrentFrame += ANIMATION_SPEED * time;
     if (mCurrentFrame > 6) mCurrentFrame = 0;
-    if(mVelX == 0)
+    if(mVel.x == 0)
     {
         mCurrentFrame = 0;
-        if(isLastDirRight)
+        if(mIsLastDirRight)
             mSprite.setTextureRect({40 * int(mCurrentFrame), 244, 40, 50});
         else
             mSprite.setTextureRect({40 * int(mCurrentFrame) + 40, 244, -40, 50});
     } 
-    else if (mVelX > 0)
+    else if (mVel.x > 0)
     {
         mSprite.setTextureRect({40 * int(mCurrentFrame), 244, 40, 50});
-        isLastDirRight = true;
+        mIsLastDirRight = true;
     }
     else
     {
         mSprite.setTextureRect({40 * int(mCurrentFrame) + 40, 244, -40, 50});
-        isLastDirRight = false;
+        mIsLastDirRight = false;
     }
     //If player touches ground
 
-    mVelX = 0;
+    mVel.x = 0;
 }
 
 void Player::draw(sf::RenderWindow &window, float offsetX, float offsetY)
 {    
-    mSprite.setPosition(mBoundingRect.left - offsetX, mBoundingRect.top - offsetY);
+    mSprite.move(-offsetX, -offsetY);
     window.draw(mSprite);
 }
 
-void Player::handleCollision(bool isAxisX, std::vector<std::string> &map)
+void Player::handleCollisionWithMapObjects(bool isAxisX,
+                                           std::vector<std::string> &map)
 {
-    for (int y = mBoundingRect.top / mTileSize;
-            y < (mBoundingRect.top + mBoundingRect.height) / mTileSize; ++y)
+    for (int y = top() / mTileSize; y < bottom() / mTileSize; ++y)
     {
-        for (int x = mBoundingRect.left / mTileSize;
-                x < (mBoundingRect.left + mBoundingRect.width) / mTileSize; ++x)
+        for (int x = left() / mTileSize; x < right() / mTileSize; ++x)
         {
             std::cout << "x = " << x << " y = " << y << std::endl;
-            std::cout << "map[y][x] == 'X' - > " << (map[y][x] == 'X') << std::endl;
+            std::cout << "map[y][x] == 'X' - > " << (map[y][x] == 'X') <<
+                    std::endl;
             if (map[y][x] == 'X')
             {
                 if (isAxisX)
                 {
-                    if (mVelX > 0)
-                        mBoundingRect.left = x * mTileSize - mBoundingRect.width;
-                    if (mVelX < 0)
-                        mBoundingRect.left = x * mTileSize + mTileSize;
+                    if (mVel.x > 0)
+                        mSprite.move(x * mTileSize - w(), 0);
+                        //mBoundingRect.left = x * mTileSize - mBoundingRect.width;
+                    if (mVel.x < 0)
+                        mSprite.move(x * mTileSize + mTileSize, 0);
+                        //mBoundingRect.left = x * mTileSize + mTileSize;
                 }
                 else
                 {
-                    if (mVelY > 0)
+                    if (mVel.y > 0)
                     {
-                        mBoundingRect.top = y * mTileSize - mBoundingRect.height;
-                        mVelY = 0;
+                        mSprite.move(0, y * mTileSize - h());
+                        //mBoundingRect.top = y * mTileSize - h();
+                        mVel.y = 0;
                         mIsOnGround = true;
                     }
-                    if (mVelY < 0)
+                    if (mVel.y < 0)
                     {
-                        mBoundingRect.top = y * mTileSize + mTileSize;
-                        mVelY = 0;
+                        mSprite.move(0, y * mTileSize + mTileSize);
+                        //mBoundingRect.top = y * mTileSize + mTileSize;
+                        mVel.y = 0;
                     }
                 }
                 break;
