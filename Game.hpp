@@ -53,34 +53,8 @@ public:
     
 private:    
 
-    enum
-    {
-        WINDOW_WIDTH = 800,
-        WINDOW_HEIGHT = 256,
-        //Все последующие данные надо загрузить из текстового файла
-        TILE_SIZE = 16,
-        PLAYER_POS_ON_SPRITE_X = 83,
-        PLAYER_POS_ON_SPRITE_Y = 145,
-        PLAYER_FRAME_STEP = 30,
-        PLAYER_NUM_FRAMES = 6,
-        PLAYER_X = 43 * TILE_SIZE,
-        PLAYER_Y = 13 * TILE_SIZE,
-        PLAYER_VELOCITY = 90,
-        PLAYER_JUMP_VELOCITY = -230,
-        ENEMY_POS_ON_SPRITE_X = 83,
-        ENEMY_POS_ON_SPRITE_Y = 145,
-        ENEMY_FRAME_STEP = 1,
-        ENEMY_NUM_FRAMES = 2,
-        ENEMY_X = 48 * TILE_SIZE,
-        ENEMY_Y = 13 * TILE_SIZE,
-        GRAVITY = 200,
-    };
-    
-    enum PlatformerGroup : std::size_t
-    {
-        GPlayers,
-        GEnamies
-    };
+    enum { WINDOW_WIDTH = 800, WINDOW_HEIGHT = 256 };    
+    enum PlatformerGroup : std::size_t { GPlayers, GEnamies };
     
     const std::string TITLE_OF_PROGRAM{"TeSimplePlatformer"};
     const float FPS{60.f};
@@ -95,27 +69,6 @@ private:
     GameState mState;
     GameStatus mStatus;
 
-    //Should be replaced by MapManager
-    /*std::vector<std::string> mMap
-    {
-        "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-        "0                                                                                                                                                    0",
-        "0                                                                                    w                                                               0",
-        "0                   w                                  w                   w                           w               w                             0",
-        "0                                      w                                       kk                                                                    0",
-        "0                                                                             k  k    k    k                                                         0",
-        "0                      c                                                      k      kkk  kkk  w                                    w                0",
-        "0                                                                       r     k       k    k                                                         0",
-        "0                                                                      rr     k  k                                                                   0",
-        "0                                                                     rrr      kk                                                                    0",
-        "0               c    kckck                                           rrrr                                                                            0",
-        "0                                      t0                           rrrrr                                                                            0",
-        "0G                                     00              t0          rrrrrr            G                                                               0",
-        "0           d    g       d             00              00         rrrrrrr                                                                            0",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-    }; */
     void showSplashScreen();
     void showMenu();
     

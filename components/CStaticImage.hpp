@@ -23,12 +23,15 @@ namespace components
         sf::Sprite sprite;
         sf::Vector2i posOnSpriteSheet;
 
+        CStaticImage() = default;
         CStaticImage(Game *game, sf::Texture& img, int posOnSpriteSheetX,
         int posOnSpriteSheetY);
-        //CStaticImage() = default;
-        //CStaticImage(const CAnimation&) = default;
-        //CStaticImage& operator=(const CStaticImage&) = default;
+        CStaticImage(const CStaticImage&) = default;
+        CStaticImage& operator=(const CStaticImage&) = default;
+        CStaticImage(CStaticImage&&) = default;
+        CStaticImage& operator=(CStaticImage&&) = default;
         virtual ~CStaticImage();
+        
         virtual void init() override;
         virtual void update(float frameTime) override;
         virtual void draw() override;

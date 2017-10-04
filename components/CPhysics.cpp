@@ -6,6 +6,7 @@
  */
 
 #include "CPhysics.hpp"
+#include <iostream>
 
 components::CPhysics::CPhysics(float gravity, sf::Vector2f size):
 gravity{gravity}, size{size}

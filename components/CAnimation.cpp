@@ -7,6 +7,7 @@
 
 #include "CAnimation.hpp"
 #include "../Game.hpp"
+#include <iostream>
 
 components::CAnimation::CAnimation(Game *game, sf::Texture& img,
         int posOnSpriteSheetX, int posOnSpriteSheetY,float animSpeed,
@@ -27,29 +28,35 @@ void components::CAnimation::init()
 
 void components::CAnimation::update(float frameTime)
 {
-    sprite.setPosition(cPhysics->left(), cPhysics->top());
-    if(isPlaying)
+    if(isPhysicsUninitialized)
     {
+        sprite.setTextureRect(sf::IntRect(posOnSpriteSheet.x,
+                                          posOnSpriteSheet.y, cPhysics->w(),
+                                          cPhysics->h()));
+        isPhysicsUninitialized = false;
+    }
+    sprite.setPosition(cPhysics->left(), cPhysics->top());
+    //if(isPlaying)
+    //{
         currentFrameTime += frameTime;
         if(currentFrameTime >= animSpeed)
         {
             currentFrameTime = 0.f;
             ++currentFrame;
-            if(currentFrame > numFrames) currentFrame = 0;
+            if(currentFrame >= numFrames - 1) currentFrame = 0;
             
             sf::IntRect destFaceRight
             {
-                posOnSpriteSheet.x +
-                (cPhysics->w() + frameStepOnSpriteSetPX) * currentFrame,
+                posOnSpriteSheet.x + frameStepOnSpriteSetPX * currentFrame,
                 posOnSpriteSheet.y,
                 cPhysics->w(),
                 cPhysics->h()
             };
-
+            
             sf::IntRect destFaceLeft
             {
-                posOnSpriteSheet.x + (cPhysics->w() +
-                frameStepOnSpriteSetPX) * currentFrame + cPhysics->w(),
+                posOnSpriteSheet.x + frameStepOnSpriteSetPX * currentFrame +
+                cPhysics->w(),
                 posOnSpriteSheet.y,
                 -cPhysics->w(),
                 cPhysics->h()
@@ -60,10 +67,15 @@ void components::CAnimation::update(float frameTime)
                 currentFrame = 0;
                 currentFrameTime = 0.f;
                 isPlaying = false;
-                if(isLastDirRight)
-                    sprite.setTextureRect(destFaceRight);
-                else
-                    sprite.setTextureRect(destFaceLeft);
+                sf::IntRect rect
+                {
+                    posOnSpriteSheet.x - frameStepOnSpriteSetPX +
+                    (isLastDirRight ? 0 : 1) * cPhysics->w(),
+                    posOnSpriteSheet.y,
+                    cPhysics->w() * (isLastDirRight ? +1 : -1),
+                    cPhysics->h()                            
+                };
+                sprite.setTextureRect(rect);
             } 
             else if (cPhysics->velocity.x > 0)
             {
@@ -76,11 +88,13 @@ void components::CAnimation::update(float frameTime)
                isLastDirRight = false;
             }
         }
-    }
+    //}
 }
 
 void components::CAnimation::draw()
 {
-    sprite.move(game->getCameraX(),  game->getCameraY());
-    game->render(sprite);
+    sprite.setPosition(cPhysics->cPosition->pos.x - game->getCameraX(),
+                       cPhysics->cPosition->pos.y - game->getCameraY());
+    if(!isPhysicsUninitialized)
+        game->render(sprite);
 }

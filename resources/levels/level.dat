@@ -3,17 +3,17 @@ resources/gfx/MarioTileSet.png
 [Tile size]
 16
 [Gravity]
-200
+250
 [Player bounding rect on the sprite]
-83 145 16 16
+112 145 16 16
 [Player number of frames]
 6
 [Player frame step]
-30
+31
 [Player move speed]
 90
 [PLayer jump velocity]
--230
+-200
 [Player map position]
 5 13
 [Enemy bounding rect on the sprite]
@@ -52,17 +52,17 @@ r 111 112 16 16
 [Map]
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0                                                                                                                                                    0
-0                                                                                    w                                                               0
-0                   w                                  w                   w                                                                         0
-0                                      w                                       kk                                                                    0
-0                                                                             k  k    k    k                                                         0
-0                      c                                                      k      kkk  kkk  w                                                     0
-0                                                                       r     k       k    k                                                         0
-0                                                                      rr     k  k                                                                   0
-0                                                                     rrr      kk                                                                    0
-0               c    kckck                                           rrrr                                                                            0
-0                                      t0                           rrrrr                                                                            0
-0G                                     00              t0          rrrrrr            G                                                               0
-0           d    g       d             00              00         rrrrrrr                                                                            0
+0                                                                                    w                                                     w         0
+0                   w                                  w                   w                           w                  c           c              0
+0                                      w                                       kk     c                             k   kkkk  k   k  kkkk            0
+0                                                                             k  k    k    k                        k   k  k  k   k  k  k            0
+0                      c                                                      k      kkk  kkk  w                    k   kkkk  k   k  kkkk            0
+0                                                                       r     k       k    k                        k   k  k  k   k  k  k            0
+0                                                                      rr     k ck                               c  k   k  k   k k   k  k            0
+0                                                                     rrr      kk                                kkkk   k  k    k    k  k            0
+0               c    kckck                                           rrrr                         r                                                  0
+0                                      t0                           rrrrr                         rr                                                 0
+0G                                     00              t0          rrrrrr            G            rrr                                                0
+0           d    g       d             00              00         rrrrrrr                         rrrrr                                              0
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

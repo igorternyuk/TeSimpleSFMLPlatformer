@@ -19,15 +19,17 @@ namespace components
         float currentFrameTime{0.f}, animSpeed;
         bool isLastDirRight{true};
         bool isPlaying{true};
-        /*components::CAnimation::CAnimation(Game *game, sf::Texture& img,
-        float posOnSpriteSheetX, float posOnSpriteSheetY,float animSpeed,
-        int numFrames, int frameStep):*/
+        bool isPhysicsUninitialized{true};
+
         CAnimation(Game *game, sf::Texture& img, int posOnSpriteSheetX,
-        int posOnSpriteSheetY,float animSpeed, int numFrames, int frameStep);
-       //CAnimation() = default;
-       // CAnimation(const CAnimation&) = default;
-        //CAnimation& operator=(const CAnimation&) = default;
+        int posOnSpriteSheetY,float animSpeed, int numFrames, int frameStep);        
+        CAnimation() = default;
+        CAnimation(const CAnimation&) = default;
+        CAnimation& operator=(const CAnimation&) = default;
+        CAnimation(CAnimation&&) = default;
+        CAnimation& operator=(CAnimation&&) = default;
         virtual ~CAnimation();
+        
         virtual void init() override;
         virtual void update(float frameTime) override;
         virtual void draw() override;

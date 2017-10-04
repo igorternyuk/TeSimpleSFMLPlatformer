@@ -73,7 +73,7 @@ ecs::Entity* Game::createPlayer()
     entity.addComponent<CAnimation>(this, mSpriteSet,
             mLevel.getPlayerData().bRectOnSpriteSet.left,
             mLevel.getPlayerData().bRectOnSpriteSet.top,
-            0.25f, mLevel.getPlayerData().numFrames,
+            0.1f, mLevel.getPlayerData().numFrames,
             mLevel.getPlayerData().frameStep);
     
     auto& cPhysics(entity.getComponent<CPhysics>());    
@@ -102,7 +102,8 @@ ecs::Entity* Game::createPlayer()
     {
         for (int x = cPhysics.left() / cPhysics.w(); x < cPhysics.right() /cPhysics.w(); ++x)
         {
-            if (map[y][x] == 'X')
+            //(TileMap[i][j]=='P') || (TileMap[i][j]=='k') || (TileMap[i][j]=='0') || (TileMap[i][j]=='r') || (TileMap[i][j]=='t')
+            if (map[y][x] == 'S' || map[y][x] == 'k' || map[y][x]=='0' || map[y][x]=='r' || map[y][x]=='t')
             {
                 if (axisX)
                 {
@@ -220,32 +221,17 @@ void Game::drawMap()
     for(std::size_t y{0u}; y < map.size(); ++y)
     {
         for (std::size_t x{0u}; x < map[y].size(); ++x)
-        { 
-            //Захардкоженные цифры заменить на структуры подгруженные з менеджера карт
-            if(map[y][x]=='S')
-                mTile.setTextureRect(sf::IntRect(95,112,16,16) ); //Камень
-            else if(map[y][x]=='k')
-                mTile.setTextureRect(sf::IntRect(143,112,16,16) ); //Стенка
-            else if(map[y][x]=='c')
-                mTile.setTextureRect(sf::IntRect(127,112,16,16)); //Сундучек со знаком вопроса
-            else if(map[y][x]=='t')
-                mTile.setTextureRect(sf::IntRect(0,47,32,48) ); //Труба
-            else if(map[y][x]=='g')
-                mTile.setTextureRect(sf::IntRect(0,139,48,37) ); //Пагорб
-            else if(map[y][x]=='G')
-                mTile.setTextureRect(sf::IntRect(145,222,77,33) ); //Гора
-            else if(map[y][x]=='d')
-                mTile.setTextureRect(sf::IntRect(0,106,74,21) ); //Лес
-            else if(map[y][x]=='w')
-                mTile.setTextureRect(sf::IntRect(99,224,41,31) ); //Хмара
-            else if(map[y][x]=='r')
-                mTile.setTextureRect(sf::IntRect(111,112,16,16) ); //Блок каменный
-            else if(map[y][x] == ' ' || map[y][x] == '0')
+        {
+            if(map[y][x] == ' ' || map[y][x] == '0')
                 continue;
-
-            mTile.setPosition(x * mLevel.getTileSize() - mCamera.x,
-                             y *  mLevel.getTileSize() - mCamera.y); 
-            mWindow.draw(mTile);
+            auto it = mLevel.getTiles().find(map[y][x]);
+            if(it != mLevel.getTiles().cend())
+            {
+                mTile.setTextureRect(it->second);
+                mTile.setPosition(x * mLevel.getTileSize() - mCamera.x,
+                                  y *  mLevel.getTileSize() - mCamera.y); 
+                mWindow.draw(mTile);
+            }
        }
     }
 }

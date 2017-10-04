@@ -189,6 +189,8 @@ bool Level::loadFromFile(const std::string &fileName)
                 ss.clear();
                 ss << line;
                 ss >> mMarioPosition.x >> mMarioPosition.y;
+                mMarioPosition.x *= mTileSize;
+                mMarioPosition.y *= mTileSize;
                 break;
             case LoadState::ENEMY_BOUNDING_RECT :
                 ss.clear();
@@ -218,6 +220,8 @@ bool Level::loadFromFile(const std::string &fileName)
                 ss.clear();
                 ss << line;
                 ss >> pos.x >> pos.y;
+                pos.x *= mTileSize;
+                pos.y *= mTileSize;
                 mEnemyPositions.push_back(pos);
                 break;
             case LoadState::TILES :

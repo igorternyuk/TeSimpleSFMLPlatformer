@@ -23,11 +23,15 @@ namespace components
         float gravity;
         std::function<void(float ft)> moveFunc;
         std::function<void(bool axisX)> onCollision;
-        //CPhysics() = default;
+        
+        CPhysics() = default;
         CPhysics(float gravity, sf::Vector2f size);
-        //CPhysics(const CPhysics&) = default;
-        //CPhysics& operator=(const CPhysics&) = default;
+        CPhysics(const CPhysics&) = default;
+        CPhysics& operator=(const CPhysics&) = default;
+        CPhysics(CPhysics&&) = default;
+        CPhysics& operator=(CPhysics&&) = default;
         virtual ~CPhysics();
+        
         virtual void init() override;
         virtual void update(float frameTime) override;
         inline auto left() const noexcept { return cPosition->x(); }

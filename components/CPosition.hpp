@@ -16,10 +16,12 @@ namespace components
     struct CPosition: ecs::Component {
         sf::Vector2f pos;
         bool isOnGround{false};
-        //CPosition() = default;
-        //CPosition(const CPosition&) = default;
+        CPosition() = default;
+        CPosition(const CPosition&) = default;
+        CPosition(CPosition&&) = default;
+        CPosition& operator=(const CPosition&) = default;
+        CPosition& operator=(CPosition&&) = default;
         CPosition(const sf::Vector2f &pos);
-        //CPosition& operator=(const CPosition&) = default;
         virtual ~CPosition();
         inline auto x() const noexcept { return pos.x; }
         inline auto y() const noexcept { return pos.y; }

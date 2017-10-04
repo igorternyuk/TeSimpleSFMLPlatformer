@@ -24,9 +24,14 @@ namespace components
         float moveSpeed, jumpVelocity;
         std::function<void()> controlFunc;
         CPlayerControl(float moveSpeed, float jumpSpeed);
-        //CPlayerControl() = default;
-        //CPlayerControl(const CPlayerControl&) = default;
+        
+        CPlayerControl() = default;
+        CPlayerControl(const CPlayerControl&) = default;
+        CPlayerControl(CPlayerControl&&) = default;
+        CPlayerControl& operator=(const CPlayerControl&) = default;
+        CPlayerControl& operator=(CPlayerControl&&) = default;
         virtual ~CPlayerControl();
+        
         virtual void init() override;
         virtual void update(float frameTime) override;
     };
