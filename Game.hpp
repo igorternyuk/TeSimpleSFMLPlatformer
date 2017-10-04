@@ -13,23 +13,14 @@
 #include "components/CPhysics.hpp"
 #include "components/CAnimation.hpp"
 #include "components/CPlayerControl.hpp"
+#include "components/CStaticImage.hpp"
+#include "Level.hpp"
 #include <vector>
 #include <string>
 #include <memory>
 
 class Game {
 public:
-    explicit Game();
-    Game(const Game&) = delete;
-    Game& operator=(const Game&) = delete;
-    Game(Game&&) = delete;
-    Game& operator=(Game&&) = delete;
-    virtual ~Game();
-    void gameLoop();
-    void render();
-    inline auto getCameraX() const noexcept { return mCamera.x; }
-    inline auto getCameraY() const noexcept { return mCamera.y; }
-private:
     enum class GameState
     {
         UNINITIALIZED,
@@ -39,6 +30,7 @@ private:
         PAUSE,
         EXIT
     };
+    
     enum class GameStatus
     {
         PLAY,
@@ -46,15 +38,42 @@ private:
         DEFEAT
     };
     
+    explicit Game();
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
+    Game(Game&&) = delete;
+    Game& operator=(Game&&) = delete;
+    virtual ~Game();
+    void gameLoop();
+    void render(const sf::Drawable& target);
+    inline auto getStatus() const noexcept { return mStatus; }
+    inline auto getState() const noexcept { return mState; }
+    inline auto getCameraX() const noexcept { return mCamera.x; }
+    inline auto getCameraY() const noexcept { return mCamera.y; }
+    
+private:    
+
     enum
     {
         WINDOW_WIDTH = 800,
-        WINDOW_HEIGHT = 272,
+        WINDOW_HEIGHT = 256,
+        //Все последующие данные надо загрузить из текстового файла
         TILE_SIZE = 16,
-        PLAYER_POS_ON_SPRITE_X = 0,
-        PLAYER_POS_ON_SPRITE_Y = 244,
+        PLAYER_POS_ON_SPRITE_X = 83,
+        PLAYER_POS_ON_SPRITE_Y = 145,
+        PLAYER_FRAME_STEP = 30,
+        PLAYER_NUM_FRAMES = 6,
+        PLAYER_X = 43 * TILE_SIZE,
+        PLAYER_Y = 13 * TILE_SIZE,
         PLAYER_VELOCITY = 90,
-        PLAYER_JUMP_VELOCITY = -230
+        PLAYER_JUMP_VELOCITY = -230,
+        ENEMY_POS_ON_SPRITE_X = 83,
+        ENEMY_POS_ON_SPRITE_Y = 145,
+        ENEMY_FRAME_STEP = 1,
+        ENEMY_NUM_FRAMES = 2,
+        ENEMY_X = 48 * TILE_SIZE,
+        ENEMY_Y = 13 * TILE_SIZE,
+        GRAVITY = 200,
     };
     
     enum PlatformerGroup : std::size_t
@@ -62,27 +81,30 @@ private:
         GPlayers,
         GEnamies
     };
+    
     const std::string TITLE_OF_PROGRAM{"TeSimplePlatformer"};
     const float FPS{60.f};
+    Level mLevel;
     const sf::Time mTimePerFrame{sf::seconds(1 / FPS)};
     sf::RenderWindow mWindow;
-    sf::RectangleShape mBlock;
+    sf::Sprite mTile;
     sf::Texture mSpriteSet;
-    ecs::EntityManager mManager;
-    
-    std::unique_ptr<Player> mPlayer;
+    ecs::EntityManager mManager;    
+    ecs::Entity* mPlayer;
     sf::Vector2f mCamera;
+    GameState mState;
+    GameStatus mStatus;
 
     //Should be replaced by MapManager
-    std::vector<std::string> mMap
+    /*std::vector<std::string> mMap
     {
         "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         "0                                                                                                                                                    0",
         "0                                                                                    w                                                               0",
-        "0                   w                                  w                   w                                                                         0",
+        "0                   w                                  w                   w                           w               w                             0",
         "0                                      w                                       kk                                                                    0",
         "0                                                                             k  k    k    k                                                         0",
-        "0                      c                                                      k      kkk  kkk  w                                                     0",
+        "0                      c                                                      k      kkk  kkk  w                                    w                0",
         "0                                                                       r     k       k    k                                                         0",
         "0                                                                      rr     k  k                                                                   0",
         "0                                                                     rrr      kk                                                                    0",
@@ -93,7 +115,7 @@ private:
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-}; 
+    }; */
     void showSplashScreen();
     void showMenu();
     
@@ -119,7 +141,7 @@ private:
             cpBall.velocity.x = ballVelocity;
     }*/
     //Фабричные функции
-    ecs::Entity& createPlayer();
+    ecs::Entity* createPlayer();
     ecs::Entity& createEnemy();
     void processEvents();
     void updatePhase(float time);

@@ -1,7 +1,54 @@
-[Player intial position]
-5 13
+[Path to image]
+resources/gfx/MarioTileSet.png
 [Tile size]
 16
+[Gravity]
+200
+[Player bounding rect on the sprite]
+83 145 16 16
+[Player number of frames]
+6
+[Player frame step]
+30
+[Player move speed]
+90
+[PLayer jump velocity]
+-230
+[Player map position]
+5 13
+[Enemy bounding rect on the sprite]
+0 0 16 16
+[Enemy number of frames]
+2
+[Enemy frame step]
+1
+[Enemy move speed]
+100
+[Enemy jump velocity]
+0
+[Enemy map positions]
+38 13
+43 13
+75 13
+[Tiles]
+#Stone
+S 95 112 16 16
+#Wall
+k 143 112 16 16
+#Coin
+c 127 112 16 16
+#Tube
+t 0 47 32 48
+#Hill
+g 0 139 48 37
+#Mountain
+G 145 222 77 33
+#Bush
+d 0 106 74 21
+#Cloud
+w 99 224 41 31
+#Rock
+r 111 112 16 16
 [Map]
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0                                                                                                                                                    0
@@ -17,6 +64,5 @@
 0                                      t0                           rrrrr                                                                            0
 0G                                     00              t0          rrrrrr            G                                                               0
 0           d    g       d             00              00         rrrrrrr                                                                            0
-PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

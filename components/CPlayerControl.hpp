@@ -18,11 +18,14 @@ namespace components
        keyboard input.*/
     struct CPlayerControl: ecs::Component
     {
+        //Наверно надо добавить указатель на game что-бы когда нейм овер 
+        //марио не реагировал на нажатия кнопок
         CPhysics* cPhysics{nullptr};
-        float moveSpeed, jumpSpeed;
+        float moveSpeed, jumpVelocity;
+        std::function<void()> controlFunc;
         CPlayerControl(float moveSpeed, float jumpSpeed);
-        CPlayerControl() = default;
-        CPlayerControl(const CPlayerControl&) = default;
+        //CPlayerControl() = default;
+        //CPlayerControl(const CPlayerControl&) = default;
         virtual ~CPlayerControl();
         virtual void init() override;
         virtual void update(float frameTime) override;

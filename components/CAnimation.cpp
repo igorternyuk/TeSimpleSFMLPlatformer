@@ -6,12 +6,13 @@
  */
 
 #include "CAnimation.hpp"
+#include "../Game.hpp"
 
 components::CAnimation::CAnimation(Game *game, sf::Texture& img,
-        float posOnSpriteSheetX, float posOnSpriteSheetY,float animSpeed,
-        int numFrames):
+        int posOnSpriteSheetX, int posOnSpriteSheetY,float animSpeed,
+        int numFrames, int frameStep):
 game{game}, posOnSpriteSheet{posOnSpriteSheetX, posOnSpriteSheetY},
-animSpeed{animSpeed}, numFrames{numFrames}
+animSpeed{animSpeed}, numFrames{numFrames}, frameStepOnSpriteSetPX{frameStep}
 {
     sprite.setTexture(img);
 }
@@ -21,7 +22,7 @@ components::CAnimation::~CAnimation() {
 
 void components::CAnimation::init()
 {
-    cPhysics = mEntity->getComponent<CPhysics>();    
+    cPhysics = &mEntity->getComponent<CPhysics>();    
 }
 
 void components::CAnimation::update(float frameTime)
@@ -38,7 +39,8 @@ void components::CAnimation::update(float frameTime)
             
             sf::IntRect destFaceRight
             {
-                posOnSpriteSheet.x + cPhysics->w() * currentFrame,
+                posOnSpriteSheet.x +
+                (cPhysics->w() + frameStepOnSpriteSetPX) * currentFrame,
                 posOnSpriteSheet.y,
                 cPhysics->w(),
                 cPhysics->h()
@@ -46,7 +48,8 @@ void components::CAnimation::update(float frameTime)
 
             sf::IntRect destFaceLeft
             {
-                posOnSpriteSheet.x + cPhysics->w() * currentFrame + cPhysics->w(),
+                posOnSpriteSheet.x + (cPhysics->w() +
+                frameStepOnSpriteSetPX) * currentFrame + cPhysics->w(),
                 posOnSpriteSheet.y,
                 -cPhysics->w(),
                 cPhysics->h()
@@ -72,12 +75,11 @@ void components::CAnimation::update(float frameTime)
                 sprite.setTextureRect(destFaceLeft);
                isLastDirRight = false;
             }
-
         }
     }
 }
 
-virtual void components::CAnimation::draw()
+void components::CAnimation::draw()
 {
     sprite.move(game->getCameraX(),  game->getCameraY());
     game->render(sprite);

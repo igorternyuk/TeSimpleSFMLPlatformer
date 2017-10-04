@@ -47,10 +47,34 @@ void ecs::EntityManager::addToGroup(Entity* entity, GroupID id)
     mGroupedEntities[id].emplace_back(entity);
 }
 
-std::vector<Entity*>& ecs::EntityManager::getEntitiesByGroup(GroupID id)
+std::vector<ecs::Entity*>& ecs::EntityManager::getEntitiesByGroup(GroupID id)
 {
     return mGroupedEntities[id];
 }
+
+/*        void refresh()
+        {
+            for(auto i(0u); i < maxGroups; ++i)
+            {
+                auto& v(groupedEntities[i]);
+
+                v.erase(std::remove_if(std::begin(v), std::end(v),
+                            [i](Entity* mEntity)
+                            {
+                                return !mEntity->isAlive() ||
+                                       !mEntity->hasGroup(i);
+                            }),
+                    std::end(v));
+            }
+
+            entities.erase(
+                std::remove_if(std::begin(entities), std::end(entities),
+                    [](const std::unique_ptr<Entity>& mEntity)
+                    {
+                        return !mEntity->isAlive();
+                    }),
+                std::end(entities));
+        }*/
 
 void ecs::EntityManager::refresh()
 {
@@ -58,13 +82,13 @@ void ecs::EntityManager::refresh()
     {
         auto& v(mGroupedEntities[i]);
 
-        v.erase(std::remove_if(v.begin(), v.end(),
-                    [i](const auto& entity)
+        v.erase(std::remove_if(std::begin(v), std::end(v),
+                    [i](Entity* entity)
                     {
                         return !entity->isAlive() ||
                                !entity->hasGroup(i);
                     }),
-            v.end());
+            std::end(v));
     }
 
     mEntities.erase(
@@ -76,10 +100,10 @@ void ecs::EntityManager::refresh()
         mEntities.end());
 }
 
-Entity& ecs::EntityManager::addEntity()
+ecs::Entity& ecs::EntityManager::addEntity()
 {
     std::unique_ptr<Entity> upEntity{std::make_unique<Entity>(*this)};
     Entity *pEntity = upEntity.get();
     mEntities.emplace_back(std::move(upEntity));
-    return pEntity;
+    return *pEntity;
 }

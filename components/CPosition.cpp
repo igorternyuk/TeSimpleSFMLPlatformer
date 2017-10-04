@@ -7,11 +7,8 @@
 
 #include "CPosition.hpp"
 
-components::CPosition::CPosition() {
-}
-
-components::CPosition::CPosition(const sf::Vector2f &pos, Map& map):
-pos{pos},map{map}
+components::CPosition::CPosition(const sf::Vector2f &pos):
+pos{pos}
 {}
 
 components::CPosition::~CPosition() {

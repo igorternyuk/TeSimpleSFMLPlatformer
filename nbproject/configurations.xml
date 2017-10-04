@@ -8,10 +8,10 @@
       <itemPath>components/CPhysics.cpp</itemPath>
       <itemPath>components/CPlayerControl.cpp</itemPath>
       <itemPath>components/CPosition.cpp</itemPath>
+      <itemPath>components/CStaticImage.cpp</itemPath>
       <itemPath>Game.cpp</itemPath>
+      <itemPath>Level.cpp</itemPath>
       <itemPath>MainMenu.cpp</itemPath>
-      <itemPath>Map.cpp</itemPath>
-      <itemPath>Player.cpp</itemPath>
       <itemPath>SplashScreen.cpp</itemPath>
       <itemPath>composition.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -23,10 +23,10 @@
       <itemPath>components/CPhysics.hpp</itemPath>
       <itemPath>components/CPlayerControl.hpp</itemPath>
       <itemPath>components/CPosition.hpp</itemPath>
+      <itemPath>components/CStaticImage.hpp</itemPath>
       <itemPath>Game.hpp</itemPath>
+      <itemPath>Level.hpp</itemPath>
       <itemPath>MainMenu.hpp</itemPath>
-      <itemPath>Map.hpp</itemPath>
-      <itemPath>Player.hpp</itemPath>
       <itemPath>ResourceManager.hpp</itemPath>
       <itemPath>SplashScreen.hpp</itemPath>
       <itemPath>composition.hpp</itemPath>
@@ -77,17 +77,13 @@
       </item>
       <item path="Game.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Level.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Level.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Map.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Player.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Player.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -110,6 +106,10 @@
       <item path="components/CPosition.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="components/CPosition.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CStaticImage.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CStaticImage.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="composition.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -152,17 +152,13 @@
       </item>
       <item path="Game.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Level.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Level.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Map.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Map.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Player.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Player.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -185,6 +181,10 @@
       <item path="components/CPosition.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="components/CPosition.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="components/CStaticImage.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="components/CStaticImage.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="composition.cpp" ex="false" tool="1" flavor2="0">
       </item>

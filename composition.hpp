@@ -21,6 +21,10 @@
 
 namespace ecs
 {
+    struct Component;
+    class Entity;
+    class EntityManager;
+    
     using ComponentID = std::size_t;
     using GroupID = std::size_t;
 
@@ -66,12 +70,11 @@ namespace ecs
         inline bool isAlive() const { return mIsAlive; }
         inline void destroy() { mIsAlive = false; }
         template<typename T>
-        bool hasComponent()
+        bool hasComponent() const
         {
             return mComponentBitset[getComponentTypeID<T>()];
         }
-        
-        template<typename T>
+
         bool hasGroup(GroupID id)
         {
             return mGroupBitset[id];
@@ -80,13 +83,15 @@ namespace ecs
         void addGroup(GroupID id) noexcept;
         
         inline void deleteGroup(GroupID id) { mGroupBitset[id] = false; }
-        
+ 
+        /*        template <typename T, typename... TArgs>
+        T& addComponent(TArgs&&... mArgs)*/
         template<typename T, typename... TArgs>
         T& addComponent(TArgs&&... args)
         {
             assert(!hasComponent<T>());
             std::unique_ptr<T> upComponent{
-                std::make_unique(std::forward<TArgs>(args)...)};
+                std::make_unique<T>(std::forward<TArgs>(args)...)};
             upComponent->mEntity = this;
             T* pComponent = upComponent.get();
             mComponents.emplace_back(std::move(upComponent));

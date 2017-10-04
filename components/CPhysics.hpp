@@ -7,9 +7,11 @@
 
 #ifndef CPHYCICS_HPP
 #define CPHYCICS_HPP
+
 #include <SFML/Graphics.hpp>
 #include "../composition.hpp"
 #include "CPosition.hpp"
+#include <functional>
 
 namespace components
 {
@@ -19,11 +21,12 @@ namespace components
         sf::Vector2i size;
         sf::Vector2f velocity;
         float gravity;
+        std::function<void(float ft)> moveFunc;
         std::function<void(bool axisX)> onCollision;
-        CPhysics() = default;
-        CPhysics(const sf::Vector2f& vel, float gravity);
-        CPhysics(const CPhysics&) = default;
-        CPhysics& operator=(const CPhysics&) = default;
+        //CPhysics() = default;
+        CPhysics(float gravity, sf::Vector2f size);
+        //CPhysics(const CPhysics&) = default;
+        //CPhysics& operator=(const CPhysics&) = default;
         virtual ~CPhysics();
         virtual void init() override;
         virtual void update(float frameTime) override;

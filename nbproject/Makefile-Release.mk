@@ -36,14 +36,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Game.o \
+	${OBJECTDIR}/Level.o \
 	${OBJECTDIR}/MainMenu.o \
-	${OBJECTDIR}/Map.o \
-	${OBJECTDIR}/Player.o \
 	${OBJECTDIR}/SplashScreen.o \
 	${OBJECTDIR}/components/CAnimation.o \
 	${OBJECTDIR}/components/CPhysics.o \
 	${OBJECTDIR}/components/CPlayerControl.o \
 	${OBJECTDIR}/components/CPosition.o \
+	${OBJECTDIR}/components/CStaticImage.o \
 	${OBJECTDIR}/composition.o \
 	${OBJECTDIR}/main.o
 
@@ -77,20 +77,15 @@ ${OBJECTDIR}/Game.o: Game.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Game.o Game.cpp
 
+${OBJECTDIR}/Level.o: Level.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Level.o Level.cpp
+
 ${OBJECTDIR}/MainMenu.o: MainMenu.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MainMenu.o MainMenu.cpp
-
-${OBJECTDIR}/Map.o: Map.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Map.o Map.cpp
-
-${OBJECTDIR}/Player.o: Player.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Player.o Player.cpp
 
 ${OBJECTDIR}/SplashScreen.o: SplashScreen.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -116,6 +111,11 @@ ${OBJECTDIR}/components/CPosition.o: components/CPosition.cpp
 	${MKDIR} -p ${OBJECTDIR}/components
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CPosition.o components/CPosition.cpp
+
+${OBJECTDIR}/components/CStaticImage.o: components/CStaticImage.cpp
+	${MKDIR} -p ${OBJECTDIR}/components
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/components/CStaticImage.o components/CStaticImage.cpp
 
 ${OBJECTDIR}/composition.o: composition.cpp
 	${MKDIR} -p ${OBJECTDIR}

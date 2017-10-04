@@ -6,18 +6,22 @@
  */
 
 #include "Game.hpp"
+
 #include <iostream>
 
+using components::CPosition;
+using components::CPhysics;
+using components::CAnimation;
+using components::CStaticImage;
+using components::CPlayerControl;
+
 Game::Game():
-mPlayer{std::make_unique<Player>()},
-mWindow{sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE_OF_PROGRAM},
-mBlock(sf::Vector2f(TILE_SIZE,TILE_SIZE))
+mWindow{sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE_OF_PROGRAM}
 {
-    int px = 7 * 32, py = 9 * 32;
     mSpriteSet.loadFromFile("resources/gfx/MarioTileSet.png");
-    auto upPlayer = std::make_unique<Player>(mSpriteSet, sf::IntRect(
-    PLAYER_POS_ON_SPRITE_X, PLAYER_POS_ON_SPRITE_Y, PLAYER_WIDTH, PLAYER_HEIGHT),
-    PLAYER_VELOCITY, PLAYER_JUMP_VELOCITY, 32);
+    mLevel.loadFromFile("resources/levels/level.dat");
+    mTile.setTexture(mSpriteSet); // Это для рисования карты
+    mPlayer = createPlayer();
 }
 
 Game::~Game() {
@@ -57,32 +61,124 @@ void Game::showMenu()
     
 }
 
-ecs::Entity& Game::createPlayer()
+ecs::Entity* Game::createPlayer()
 {
-    /*            auto& entity(manager.addEntity());
-
-            entity.addComponent<CPosition>(
-                Vector2f{windowWidth / 2.f, windowHeight / 2.f});
-            entity.addComponent<CPhysics>(Vector2f{ballRadius, ballRadius});
-            entity.addComponent<CCircle>(this, ballRadius);
-
-            auto& cPhysics(entity.getComponent<CPhysics>());
-            cPhysics.velocity = Vector2f{-ballVelocity, -ballVelocity};
-            cPhysics.onOutOfBounds = [&cPhysics](const Vector2f& mSide)
+    auto& entity(mManager.addEntity());
+    entity.addComponent<CPosition>(mLevel.getPlayerPos());
+    int w{mLevel.getPlayerData().bRectOnSpriteSet.width};
+    int h{mLevel.getPlayerData().bRectOnSpriteSet.height};
+    entity.addComponent<CPhysics>(mLevel.getGravity(),sf::Vector2f(w,h));
+    entity.addComponent<CPlayerControl>(mLevel.getPlayerData().moveSpeed,
+            mLevel.getPlayerData().jumpVelocity);
+    entity.addComponent<CAnimation>(this, mSpriteSet,
+            mLevel.getPlayerData().bRectOnSpriteSet.left,
+            mLevel.getPlayerData().bRectOnSpriteSet.top,
+            0.25f, mLevel.getPlayerData().numFrames,
+            mLevel.getPlayerData().frameStep);
+    
+    auto& cPhysics(entity.getComponent<CPhysics>());    
+    
+    cPhysics.moveFunc = [&cPhysics](float ft)
+    {
+        cPhysics.cPosition->pos.x += cPhysics.velocity.x * ft;
+        //Check collision with respect to X-axis
+        cPhysics.onCollision(true);
+        if(!cPhysics.cPosition->isOnGround)
+        {
+            cPhysics.velocity.y += cPhysics.gravity * ft;
+        }
+        cPhysics.cPosition->pos.y += cPhysics.velocity.y * ft;
+        cPhysics.cPosition->isOnGround = false;
+        //Check collision with respect to Y-axis
+        cPhysics.onCollision(false);
+    };
+    
+    cPhysics.onCollision = [&](bool axisX)
+    {
+    auto& map = mLevel.getMap();
+    int tileSize = mLevel.getTileSize();
+        //Тут логика по обработке коллизий марио с картой
+    for (int y = cPhysics.top() / cPhysics.h(); y < cPhysics.bottom() / cPhysics.h(); ++y)
+    {
+        for (int x = cPhysics.left() / cPhysics.w(); x < cPhysics.right() /cPhysics.w(); ++x)
+        {
+            if (map[y][x] == 'X')
             {
-                if(mSide.x != 0.f)
-                    cPhysics.velocity.x =
-                        std::abs(cPhysics.velocity.x) * mSide.x;
+                if (axisX)
+                {
+                    if (cPhysics.velocity.x > 0)
+                    {
+                        cPhysics.cPosition->pos.x = x * tileSize - cPhysics.w();
+                    }
+                        //mBoundingRect.left = x * mTileSize - mBoundingRect.width;
+                    if (cPhysics.velocity.x < 0)
+                    {
+                        cPhysics.cPosition->pos.x = x * tileSize + tileSize;
+                    }
+                        //mBoundingRect.left = x * mTileSize + mTileSize;
+                }
+                else
+                {
+                    if (cPhysics.velocity.y > 0)
+                    {
+                        cPhysics.cPosition->pos.y = y * tileSize - cPhysics.h();
+                        //mBoundingRect.top = y * mTileSize - h();
+                        cPhysics.velocity.y = 0;
+                        cPhysics.cPosition->isOnGround = true;
+                    }
+                    if (cPhysics.velocity.y < 0)
+                    {
+                        cPhysics.cPosition->pos.y = y * tileSize + tileSize;
+                        //mBoundingRect.top = y * mTileSize + mTileSize;
+                        cPhysics.velocity.y = 0;
+                    }
+                }
+                break;
+            }
+            else if(map[y][x] == '0')
+            {
+                map[y][x] = ' ';
+            }
+        }
+    }
+    };
+    
+    auto& cPlayerControl(entity.getComponent<CPlayerControl>());
+    
+    cPlayerControl.controlFunc = [&cPlayerControl]()
+    {
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
+                !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            cPlayerControl.cPhysics->velocity.x = 0;
+        }
+        else
+        {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            {
+                cPlayerControl.cPhysics->velocity.x = -cPlayerControl.moveSpeed;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            {
+                cPlayerControl.cPhysics->velocity.x = cPlayerControl.moveSpeed;
+            }
+        }
 
-                if(mSide.y != 0.f)
-                    cPhysics.velocity.y =
-                        std::abs(cPhysics.velocity.y) * mSide.y;
-            };
-
-            entity.addGroup(ArkanoidGroup::GBall);
-
-            return entity;*/
-}
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            //std::cout << "jump" << std::endl;
+            if (cPlayerControl.cPhysics->cPosition->isOnGround)
+            {
+                //Player can jump only from ground
+                cPlayerControl.cPhysics->velocity.y = cPlayerControl.jumpVelocity;
+                cPlayerControl.cPhysics->cPosition->isOnGround = false;
+            }
+        }
+    };
+    
+    entity.addGroup(GPlayers);
+    return &entity;
+ }
 
 ecs::Entity& Game::createEnemy()
 {
@@ -99,86 +195,73 @@ void Game::processEvents()
             mWindow.close();
         }
     }
-    mPlayer->handleUserInput();
 }
 
 void Game::updatePhase(float time)
 {
-    mPlayer->update(time, mMap);
+    mManager.refresh();
+    mManager.update(time);
     //Camera
     scrollCamera();
 }
 
 void Game::renderPhase()
 {
-    mWindow.clear(sf::Color::Cyan);
+    mWindow.clear(sf::Color(107,140,255));
     drawMap();
-    mPlayer->draw(mWindow, mCamera.x, mCamera.y);
+    mManager.draw();
     mWindow.display();
 }
 
 void Game::drawMap()
 {
     //Прорисовка карты
-    /*		 for (int i=0; i<H; i++)
-			 for (int j=0; j<W; j++)
-			  { 
-				if (TileMap[i][j]=='P')  tile.setTextureRect( IntRect(143-16*3,112,16,16) );
-
-				if (TileMap[i][j]=='k')  tile.setTextureRect( IntRect(143,112,16,16) );
-				                                 
-   			    if (TileMap[i][j]=='c')  tile.setTextureRect( IntRect(143-16,112,16,16) );
-
-				if (TileMap[i][j]=='t')  tile.setTextureRect( IntRect(0,47,32,95-47) );
-
-				if (TileMap[i][j]=='g')  tile.setTextureRect( IntRect(0,16*9-5,3*16,16*2+5) );
-
-				if (TileMap[i][j]=='G')  tile.setTextureRect( IntRect(145,222,222-145,255-222) );
-
-			    if (TileMap[i][j]=='d')  tile.setTextureRect( IntRect(0,106,74,127-106) );
-
-				if (TileMap[i][j]=='w')  tile.setTextureRect( IntRect(99,224,140-99,255-224) );
-
-				if (TileMap[i][j]=='r')  tile.setTextureRect( IntRect(143-32,112,16,16) );
-
-				if ((TileMap[i][j]==' ') || (TileMap[i][j]=='0')) continue;
-
-  			    tile.setPosition(j*16-offsetX,i*16 - offsetY) ; 
-		        window.draw(tile);
-		     }
-		 */
-    for (std::size_t y = 0; y < mMap.size(); ++y)
+    auto& map = mLevel.getMap();
+    for(std::size_t y{0u}; y < map.size(); ++y)
     {
-        for (std::size_t x = 0; x < mMap[y].size(); ++x)
-        {
-            if(mMap[y][x] == 'X')
-            {
-                mBlock.setFillColor(sf::Color(127, 0, 0));
-            }
-            else if(mMap[y][x] == '0')
-            {
-                mBlock.setFillColor(sf::Color(127, 127, 0));
-            }
-            else
+        for (std::size_t x{0u}; x < map[y].size(); ++x)
+        { 
+            //Захардкоженные цифры заменить на структуры подгруженные з менеджера карт
+            if(map[y][x]=='S')
+                mTile.setTextureRect(sf::IntRect(95,112,16,16) ); //Камень
+            else if(map[y][x]=='k')
+                mTile.setTextureRect(sf::IntRect(143,112,16,16) ); //Стенка
+            else if(map[y][x]=='c')
+                mTile.setTextureRect(sf::IntRect(127,112,16,16)); //Сундучек со знаком вопроса
+            else if(map[y][x]=='t')
+                mTile.setTextureRect(sf::IntRect(0,47,32,48) ); //Труба
+            else if(map[y][x]=='g')
+                mTile.setTextureRect(sf::IntRect(0,139,48,37) ); //Пагорб
+            else if(map[y][x]=='G')
+                mTile.setTextureRect(sf::IntRect(145,222,77,33) ); //Гора
+            else if(map[y][x]=='d')
+                mTile.setTextureRect(sf::IntRect(0,106,74,21) ); //Лес
+            else if(map[y][x]=='w')
+                mTile.setTextureRect(sf::IntRect(99,224,41,31) ); //Хмара
+            else if(map[y][x]=='r')
+                mTile.setTextureRect(sf::IntRect(111,112,16,16) ); //Блок каменный
+            else if(map[y][x] == ' ' || map[y][x] == '0')
                 continue;
-            mBlock.setPosition(x * TILE_SIZE - mCamera.x, y * TILE_SIZE - mCamera.y);
-            mWindow.draw(mBlock);
-        }
+
+            mTile.setPosition(x * mLevel.getTileSize() - mCamera.x,
+                             y *  mLevel.getTileSize() - mCamera.y); 
+            mWindow.draw(mTile);
+       }
     }
-    
-    /**/
 }
 
 void Game::scrollCamera()
 {
-    if(mPlayer->getX() > WINDOW_WIDTH / 2 &&
-            mPlayer->getX() < mMap[0].size() * TILE_SIZE - WINDOW_WIDTH / 2 )
+    if(mPlayer->getComponent<CPosition>().pos.x > WINDOW_WIDTH / 2 &&
+       mPlayer->getComponent<CPosition>().pos.x <
+            mLevel.getMap()[0].size() * mLevel.getTileSize() - WINDOW_WIDTH / 2)
     {
-        mCamera.x = mPlayer->getX() - WINDOW_WIDTH / 2;
+        mCamera.x = mPlayer->getComponent<CPosition>().pos.x - WINDOW_WIDTH / 2;
     }
-    if(mPlayer->getY() > WINDOW_HEIGHT / 2 &&
-            mPlayer->getY() < mMap.size() * TILE_SIZE - WINDOW_HEIGHT / 2 )
+    if(mPlayer->getComponent<CPosition>().pos.y > WINDOW_HEIGHT / 2 &&
+        mPlayer->getComponent<CPosition>().pos.y <
+            mLevel.getMap().size() * mLevel.getTileSize() - WINDOW_HEIGHT / 2)
     {
-        mCamera.y = mPlayer->getY() - WINDOW_HEIGHT / 2;
+        mCamera.y = mPlayer->getComponent<CPosition>().pos.y - WINDOW_HEIGHT / 2;
     }
 }

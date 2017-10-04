@@ -2,7 +2,7 @@
  * File:   ResourceManager.hpp
  * Author: igor
  *
- * Created on 1-09-2017., 8:10
+ * Created on 1-10-2017., 8:10
  */
 
 #ifndef RESOURCEMANAGER_HPP
