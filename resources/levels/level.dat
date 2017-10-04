@@ -53,16 +53,16 @@ r 111 112 16 16
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0                                                                                                                                                    0
 0                                                                                    w                                                     w         0
-0                   w                                  w                   w                           w                  c           c              0
-0                                      w                                       kk     c                             k   kkkk  k   k  kkkk            0
-0                                                                             k  k    k    k                        k   k  k  k   k  k  k            0
+0                   w                                  w                   w                       w                      c           c              0
+0                                      w                                       kk     c    c                        k   kkkk  k   k  kkkk            0
+0                                                                             k  k    kc  ck              w         k   k  k  k   k  k  k            0
 0                      c                                                      k      kkk  kkk  w                    k   kkkk  k   k  kkkk            0
 0                                                                       r     k       k    k                        k   k  k  k   k  k  k            0
 0                                                                      rr     k ck                               c  k   k  k   k k   k  k            0
 0                                                                     rrr      kk                                kkkk   k  k    k    k  k            0
 0               c    kckck                                           rrrr                         r                                                  0
-0                                      t0                           rrrrr                         rr                                                 0
-0G                                     00              t0          rrrrrr            G            rrr                                                0
-0           d    g       d             00              00         rrrrrrr                         rrrrr                                              0
+0                                      t0                           rrrrr                         rr        t0                               00      0
+0G                                     00              t0          rrrrrr            G            rrr       00                               00      0
+0           d    g       d             00              00         rrrrrrrc                        rrrrr     00                               00c    c0
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

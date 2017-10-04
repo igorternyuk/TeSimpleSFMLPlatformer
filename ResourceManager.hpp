@@ -11,11 +11,13 @@
 #include <memory>
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 template <typename Identifier, typename Resource>
 class ResourceManager
 {
     public:
+        ResourceManager() = default;
         void load(Identifier id, const std::string &fileName);
         Resource& get(Identifier id);
         const Resource& get(Identifier id) const;
@@ -31,10 +33,10 @@ void ResourceManager<Identifier, Resource>::load(Identifier id,
     if(!resource->loadFromFile(fileName))
     {
         throw std::runtime_error("ResourceManager::load - Failed to load: " +
-                fileName);
-        auto inserted = mResourceMap.insert({id, std::move(resource)});
-        assert(inserted.second);
+                fileName);       
     }
+    auto inserted = mResourceMap.insert(std::make_pair(id, std::move(resource)));
+    assert(inserted.second);
 }
 template <typename Identifier, typename Resource> 
 Resource& ResourceManager<Identifier, Resource>::get(Identifier id)

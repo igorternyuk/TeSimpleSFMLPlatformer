@@ -8,6 +8,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <SFML/Audio.hpp>
+#include "ResourceManager.hpp"
 #include "composition.hpp"
 #include "components/CPosition.hpp"
 #include "components/CPhysics.hpp"
@@ -62,13 +64,21 @@ private:
     const sf::Time mTimePerFrame{sf::seconds(1 / FPS)};
     sf::RenderWindow mWindow;
     sf::Sprite mTile;
-    sf::Texture mSpriteSet;
+    //sf::Texture mSpriteSet;
     ecs::EntityManager mManager;    
     ecs::Entity* mPlayer;
     sf::Vector2f mCamera;
     GameState mState;
     GameStatus mStatus;
-
+    enum class TextureID { SPRITE_SET = 0 };
+    ResourceManager<TextureID, sf::Texture> mTextureManager;
+    enum class FontID { GERMAN = 0 };
+    ResourceManager<FontID, sf::Font> mFontManager;
+    enum class SoundBuffertID { JUMP = 0 };
+    ResourceManager<SoundBuffertID, sf::SoundBuffer> mSoundBufferManager;
+    sf::Sound mSoundJump;
+    int mScore{0};
+    sf::Text mScoreLabel;
     void showSplashScreen();
     void showMenu();
     
@@ -100,6 +110,7 @@ private:
     void updatePhase(float time);
     void renderPhase();
     void drawMap();
+    void drawScore();
     void scrollCamera();
 };
 

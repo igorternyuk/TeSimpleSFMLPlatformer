@@ -8,6 +8,7 @@
 #include "Game.hpp"
 
 #include <iostream>
+#include <algorithm>
 
 using components::CPosition;
 using components::CPhysics;
@@ -18,10 +19,19 @@ using components::CPlayerControl;
 Game::Game():
 mWindow{sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE_OF_PROGRAM}
 {
-    mSpriteSet.loadFromFile("resources/gfx/MarioTileSet.png");
+    //mTextureManager.get(TextureID::SPRITE_SET).loadFromFile("resources/gfx/MarioTileSet.png");
     mLevel.loadFromFile("resources/levels/level.dat");
-    mTile.setTexture(mSpriteSet); // Это для рисования карты
+    mTextureManager.load(TextureID::SPRITE_SET, mLevel.getPathToSpriteSet());
+    mTile.setTexture(mTextureManager.get(TextureID::SPRITE_SET)); // Это для рисования карты
     mPlayer = createPlayer();
+    mFontManager.load(FontID::GERMAN, "resources/fonts/BRLNSR.TTF");
+    mScoreLabel.setFont(mFontManager.get(FontID::GERMAN));
+    mScoreLabel.setColor(sf::Color::Yellow);
+    mScoreLabel.setCharacterSize(30);
+    mScoreLabel.setPosition(5, 5);
+    mSoundBufferManager.load(SoundBuffertID::JUMP, "resources/sounds/Jump.ogg");
+    mSoundJump.setBuffer( mSoundBufferManager.get(SoundBuffertID::JUMP));
+    //mTextureManager.get(TextureID::SPRITE_SET);
 }
 
 Game::~Game() {
@@ -37,6 +47,7 @@ void Game::gameLoop()
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     
+    ///////MAIN LOOP OF THE GAME //////////////////
     while (mWindow.isOpen())
     {
         processEvents();        
@@ -70,7 +81,7 @@ ecs::Entity* Game::createPlayer()
     entity.addComponent<CPhysics>(mLevel.getGravity(),sf::Vector2f(w,h));
     entity.addComponent<CPlayerControl>(mLevel.getPlayerData().moveSpeed,
             mLevel.getPlayerData().jumpVelocity);
-    entity.addComponent<CAnimation>(this, mSpriteSet,
+    entity.addComponent<CAnimation>(this, mTextureManager.get(TextureID::SPRITE_SET),
             mLevel.getPlayerData().bRectOnSpriteSet.left,
             mLevel.getPlayerData().bRectOnSpriteSet.top,
             0.1f, mLevel.getPlayerData().numFrames,
@@ -98,12 +109,14 @@ ecs::Entity* Game::createPlayer()
     auto& map = mLevel.getMap();
     int tileSize = mLevel.getTileSize();
         //Тут логика по обработке коллизий марио с картой
-    for (int y = cPhysics.top() / cPhysics.h(); y < cPhysics.bottom() / cPhysics.h(); ++y)
+    for (int y = cPhysics.top() / cPhysics.h();
+            y < cPhysics.bottom() / cPhysics.h(); ++y)
     {
-        for (int x = cPhysics.left() / cPhysics.w(); x < cPhysics.right() /cPhysics.w(); ++x)
+        for (int x = cPhysics.left() / cPhysics.w();
+                x < cPhysics.right() /cPhysics.w(); ++x)
         {
-            //(TileMap[i][j]=='P') || (TileMap[i][j]=='k') || (TileMap[i][j]=='0') || (TileMap[i][j]=='r') || (TileMap[i][j]=='t')
-            if (map[y][x] == 'S' || map[y][x] == 'k' || map[y][x]=='0' || map[y][x]=='r' || map[y][x]=='t')
+            if (map[y][x] == 'S' || map[y][x] == 'k' || map[y][x]=='0' ||
+                map[y][x]=='r' || map[y][x]=='t')
             {
                 if (axisX)
                 {
@@ -111,34 +124,32 @@ ecs::Entity* Game::createPlayer()
                     {
                         cPhysics.cPosition->pos.x = x * tileSize - cPhysics.w();
                     }
-                        //mBoundingRect.left = x * mTileSize - mBoundingRect.width;
                     if (cPhysics.velocity.x < 0)
                     {
                         cPhysics.cPosition->pos.x = x * tileSize + tileSize;
                     }
-                        //mBoundingRect.left = x * mTileSize + mTileSize;
                 }
                 else
                 {
                     if (cPhysics.velocity.y > 0)
                     {
                         cPhysics.cPosition->pos.y = y * tileSize - cPhysics.h();
-                        //mBoundingRect.top = y * mTileSize - h();
                         cPhysics.velocity.y = 0;
                         cPhysics.cPosition->isOnGround = true;
                     }
                     if (cPhysics.velocity.y < 0)
                     {
                         cPhysics.cPosition->pos.y = y * tileSize + tileSize;
-                        //mBoundingRect.top = y * mTileSize + mTileSize;
                         cPhysics.velocity.y = 0;
                     }
                 }
                 break;
             }
-            else if(map[y][x] == '0')
+            else if(map[y][x] == 'c')
             {
+                //Score
                 map[y][x] = ' ';
+                ++mScore;
             }
         }
     }
@@ -146,7 +157,7 @@ ecs::Entity* Game::createPlayer()
     
     auto& cPlayerControl(entity.getComponent<CPlayerControl>());
     
-    cPlayerControl.controlFunc = [&cPlayerControl]()
+    cPlayerControl.controlFunc = [&]()
     {
         if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
                 !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -171,8 +182,10 @@ ecs::Entity* Game::createPlayer()
             if (cPlayerControl.cPhysics->cPosition->isOnGround)
             {
                 //Player can jump only from ground
-                cPlayerControl.cPhysics->velocity.y = cPlayerControl.jumpVelocity;
+                cPlayerControl.cPhysics->velocity.y = 
+                        cPlayerControl.jumpVelocity;
                 cPlayerControl.cPhysics->cPosition->isOnGround = false;
+                mSoundJump.play();
             }
         }
     };
@@ -210,8 +223,16 @@ void Game::renderPhase()
 {
     mWindow.clear(sf::Color(107,140,255));
     drawMap();
+    drawScore();
     mManager.draw();
     mWindow.display();
+}
+
+
+void Game::drawScore()
+{
+    mScoreLabel.setString(std::string("SCORE:") + std::to_string(mScore));
+    mWindow.draw(mScoreLabel);
 }
 
 void Game::drawMap()
@@ -248,6 +269,7 @@ void Game::scrollCamera()
         mPlayer->getComponent<CPosition>().pos.y <
             mLevel.getMap().size() * mLevel.getTileSize() - WINDOW_HEIGHT / 2)
     {
-        mCamera.y = mPlayer->getComponent<CPosition>().pos.y - WINDOW_HEIGHT / 2;
+        mCamera.y = mPlayer->getComponent<CPosition>().pos.y
+                - WINDOW_HEIGHT / 2;
     }
 }
