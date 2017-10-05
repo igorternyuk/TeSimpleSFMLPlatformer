@@ -23,23 +23,8 @@
 
 class Game {
 public:
-    enum class GameState
-    {
-        UNINITIALIZED,
-        SPLASH_SCREEN,
-        MENU,
-        PLAY,
-        PAUSE,
-        EXIT
-    };
-    
-    enum class GameStatus
-    {
-        PLAY,
-        VICTORY,
-        DEFEAT
-    };
-    
+    enum class GameState { PLAY, PAUSE };    
+    enum class GameStatus { PLAY, VICTORY, DEFEAT };
     explicit Game();
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
@@ -58,7 +43,7 @@ private:
     enum { WINDOW_WIDTH = 800, WINDOW_HEIGHT = 256, FPS = 60 };    
     enum PlatformerGroup : std::size_t { GPlayers, GEnemies };    
     const std::string TITLE_OF_PROGRAM{"TeSimplePlatformer"};
-    Level mLevel;
+    
     const sf::Time mTimePerFrame{sf::seconds(1.0f / FPS)};
     sf::RenderWindow mWindow;
     sf::Sprite mTile;
@@ -69,6 +54,13 @@ private:
     GameState mState = GameState::PLAY;
     GameStatus mStatus = GameStatus::PLAY;
     sf::Text mStatusLabel;
+    
+    //Levels
+    
+    enum class LevelID { FIRST = 0 };
+    ResourceManager<LevelID, Level> mLevelManager;
+    Level* mCurrentLevel{nullptr};
+    std::vector<std::string> mMap;
     
     //Textures
     
@@ -89,6 +81,7 @@ private:
         VICTORY,
         DEFEAT
     };
+    
     ResourceManager<SoundID, sf::SoundBuffer> mSoundBufferManager;
     std::map<SoundID, sf::Sound> mSounds;
     sf::Music mBGM;
@@ -119,6 +112,8 @@ private:
     
     void checkWin();
     void prepareNewGame();
+    void createEntities();
+    void togglePause();
     void processEvents();
     void updatePhase(float time);
     void renderPhase();
@@ -126,7 +121,8 @@ private:
     void drawScore();
     void drawGameStatus();
     void scrollCamera();
-    void loadSounds();
+    void resetCamera();
+    void loadSoundsAndMusic();
 };
 
 #endif /* GAME_HPP */

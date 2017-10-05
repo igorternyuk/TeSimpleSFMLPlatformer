@@ -37,8 +37,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Game.o \
 	${OBJECTDIR}/Level.o \
-	${OBJECTDIR}/MainMenu.o \
-	${OBJECTDIR}/SplashScreen.o \
 	${OBJECTDIR}/components/CAnimation.o \
 	${OBJECTDIR}/components/CPhysics.o \
 	${OBJECTDIR}/components/CPlayerControl.o \
@@ -82,16 +80,6 @@ ${OBJECTDIR}/Level.o: Level.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Level.o Level.cpp
-
-${OBJECTDIR}/MainMenu.o: MainMenu.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MainMenu.o MainMenu.cpp
-
-${OBJECTDIR}/SplashScreen.o: SplashScreen.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags sfml-all` -std=c++14  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SplashScreen.o SplashScreen.cpp
 
 ${OBJECTDIR}/components/CAnimation.o: components/CAnimation.cpp
 	${MKDIR} -p ${OBJECTDIR}/components

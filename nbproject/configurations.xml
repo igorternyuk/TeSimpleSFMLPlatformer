@@ -11,8 +11,6 @@
       <itemPath>components/CStaticImage.cpp</itemPath>
       <itemPath>Game.cpp</itemPath>
       <itemPath>Level.cpp</itemPath>
-      <itemPath>MainMenu.cpp</itemPath>
-      <itemPath>SplashScreen.cpp</itemPath>
       <itemPath>composition.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>random.cpp</itemPath>
@@ -27,9 +25,7 @@
       <itemPath>components/CStaticImage.hpp</itemPath>
       <itemPath>Game.hpp</itemPath>
       <itemPath>Level.hpp</itemPath>
-      <itemPath>MainMenu.hpp</itemPath>
       <itemPath>ResourceManager.hpp</itemPath>
-      <itemPath>SplashScreen.hpp</itemPath>
       <itemPath>composition.hpp</itemPath>
       <itemPath>random.h</itemPath>
     </logicalFolder>
@@ -83,15 +79,7 @@
       </item>
       <item path="Level.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SplashScreen.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SplashScreen.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="components/CAnimation.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -153,6 +141,11 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs sfml-all`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="Game.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -162,15 +155,7 @@
       </item>
       <item path="Level.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MainMenu.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="MainMenu.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ResourceManager.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SplashScreen.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="SplashScreen.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="components/CAnimation.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -93,8 +93,8 @@ void components::CAnimation::update(float frameTime)
 
 void components::CAnimation::draw()
 {
-    sprite.setPosition(cPhysics->cPosition->pos.x - game->getCameraX(),
-                       cPhysics->cPosition->pos.y - game->getCameraY());
+    sprite.setPosition(cPhysics->left() - game->getCameraX(),
+                       cPhysics->top() - game->getCameraY());
     if(!isPhysicsUninitialized)
         game->render(sprite);
 }

@@ -28,13 +28,17 @@ mWindow{sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE_OF_PROGRAM}
                         (screenHeight - WINDOW_HEIGHT) / 2));
     
     //Load level data from text file
-    mLevel.loadFromFile("resources/levels/level.dat");
-    mTextureManager.load(TextureID::SPRITE_SET, mLevel.getPathToSpriteSet());
-    mTile.setTexture(mTextureManager.get(TextureID::SPRITE_SET)); // Это для рисования карты
     
-    mPlayer = createPlayer();
-    createEnemies();
-   
+    //mLevel.loadFromFile("resources/levels/level.dat");
+    mLevelManager.load(LevelID::FIRST, "resources/levels/level.dat");
+    mCurrentLevel = &mLevelManager.get(LevelID::FIRST);
+    mMap = mCurrentLevel->getMap();
+    
+    mTextureManager.load(TextureID::SPRITE_SET,
+                         mCurrentLevel->getPathToSpriteSet());
+    
+    mTile.setTexture(mTextureManager.get(TextureID::SPRITE_SET)); // Это для рисования карты
+       
     mFontManager.load(FontID::GERMAN, "resources/fonts/BRLNSR.TTF");
     
     mScoreLabel.setFont(mFontManager.get(FontID::GERMAN));
@@ -46,20 +50,42 @@ mWindow{sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE_OF_PROGRAM}
     mStatusLabel.setColor(sf::Color::Green);
     mStatusLabel.setCharacterSize(80);
     
-    mBGM.openFromFile("resources/sounds/Mario_Theme.ogg");
-    mBGM.setLoop(true);
-    loadSounds();
+
+    loadSoundsAndMusic();
     
-    auto& enemies(mManager.getEntitiesByGroup(GEnemies));
-    std::cout << "enemies.size() = " << enemies.size() << std::endl;
+    //createEntities
+    
+    createEntities();
+
 } 
 
 Game::~Game() {
 }
 
-void Game::render(const sf::Drawable& target)
+void Game::prepareNewGame()
 {
-    mWindow.draw(target);
+    mManager.destroyAll();
+    mScore = 0;
+    //Reload map
+    mMap = mCurrentLevel->getMap();
+    createEntities();
+    resetCamera();
+    mStatus = GameStatus::PLAY;
+    mState = GameState::PLAY;
+}
+
+void Game::createEntities()
+{
+    mPlayer = createPlayer();
+    createEnemies();
+}
+
+void Game::togglePause()
+{
+    if(mState == GameState::PLAY)
+        mState = GameState::PAUSE;
+    else if(mState == GameState::PAUSE)
+        mState = GameState::PLAY;
 }
 
 void Game::gameLoop()
@@ -93,54 +119,70 @@ void Game::showMenu()
     
 }
 
+void Game::render(const sf::Drawable& target)
+{
+    mWindow.draw(target);
+}
+
+
 ecs::Entity* Game::createPlayer()
 {
     auto& entity(mManager.addEntity());
-    entity.addComponent<CPosition>(mLevel.getPlayerPos());
-    int w{mLevel.getPlayerData().bRectOnSpriteSet.width};
-    int h{mLevel.getPlayerData().bRectOnSpriteSet.height};
-    entity.addComponent<CPhysics>(mLevel.getGravity(),sf::Vector2f(w,h));
-    entity.addComponent<CPlayerControl>(mLevel.getPlayerData().moveSpeed,
-            mLevel.getPlayerData().jumpVelocity);
+    //entity.addComponent<CPosition>(sf::Vector2f(100, 180));
+    entity.addComponent<CPosition>(mCurrentLevel->getPlayerPos());
+    
+    int w{mCurrentLevel->getPlayerData()
+    .bRectOnSpriteSet.width};
+    int h{mCurrentLevel->getPlayerData()
+    .bRectOnSpriteSet.height};
+    entity.addComponent<CPhysics>(mCurrentLevel->getGravity(),sf::Vector2f(w,h));
+    
+    entity.addComponent<CPlayerControl>(mCurrentLevel->getPlayerData().moveSpeed,
+            mCurrentLevel->getPlayerData().jumpVelocity);
+    
     entity.addComponent<CAnimation>(this,
             mTextureManager.get(TextureID::SPRITE_SET),
-            mLevel.getPlayerData().bRectOnSpriteSet.left,
-            mLevel.getPlayerData().bRectOnSpriteSet.top,
-            0.1f, mLevel.getPlayerData().numFrames,
-            mLevel.getPlayerData().frameStep);
+            mCurrentLevel->getPlayerData()
+            .bRectOnSpriteSet.left,
+            mCurrentLevel->getPlayerData()
+            .bRectOnSpriteSet.top,
+            0.1f, mCurrentLevel->getPlayerData().numFrames,
+            mCurrentLevel->getPlayerData().frameStep);
     
     auto& cPhysics(entity.getComponent<CPhysics>());    
     
-    cPhysics.moveFunc = [&cPhysics](float ft)
+    cPhysics.moveFunc = [&](float ft)
     {
         cPhysics.cPosition->pos.x += cPhysics.velocity.x * ft;
+        
         //Check collision with respect to X-axis
+        
         cPhysics.onCollision(true);
+        
         if(!cPhysics.cPosition->isOnGround)
         {
             cPhysics.velocity.y += cPhysics.gravity * ft;
-        }
-        cPhysics.cPosition->pos.y += cPhysics.velocity.y * ft;
-        cPhysics.cPosition->isOnGround = false;
+            cPhysics.cPosition->pos.y += cPhysics.velocity.y * ft;
+        }      
+        
         //Check collision with respect to Y-axis
         cPhysics.onCollision(false);
     };
     
     cPhysics.onCollision = [&](bool axisX)
     {
-        auto& map = mLevel.getMap();
-        int tileSize = mLevel.getTileSize();
+        int tileSize = mCurrentLevel->getTileSize();
             //Тут логика по обработке коллизий марио с картой
-        for (int y = cPhysics.top() / cPhysics.h();
+        for (int y = cPhysics.top()/ cPhysics.h();
                 y < cPhysics.bottom() / cPhysics.h(); ++y)
         {
             for (int x = cPhysics.left() / cPhysics.w();
                     x < cPhysics.right() /cPhysics.w(); ++x)
             {
-                if (map[y][x] == 'S' || map[y][x] == 'k' || map[y][x]=='0' ||
-                    map[y][x]=='r' || map[y][x]=='t')
+                if (mMap[y][x] == 'S' || mMap[y][x] == 'k' || mMap[y][x]=='0' ||
+                    mMap[y][x]=='r' || mMap[y][x]=='t')
                 {
-                    if (axisX)
+                    if(axisX)
                     {
                         if (cPhysics.velocity.x > 0)
                         {
@@ -169,12 +211,16 @@ ecs::Entity* Game::createPlayer()
                     }
                     break;
                 }
-                else if(map[y][x] == 'c')
+                else if(mMap[y][x] == 'c')
                 {
                     //Score
-                    map[y][x] = ' ';
+                    mMap[y][x] = ' ';
                     ++mScore;
                     mSounds[SoundID::COLLECT_POINT].play();
+                }
+                else
+                {
+                    cPhysics.cPosition->isOnGround = false;
                 }
             }
         }
@@ -207,8 +253,7 @@ ecs::Entity* Game::createPlayer()
             if (cPlayerControl.cPhysics->cPosition->isOnGround)
             {
                 //Player can jump only from ground
-                cPlayerControl.cPhysics->velocity.y = 
-                        cPlayerControl.jumpVelocity;
+                cPlayerControl.cPhysics->velocity.y = cPlayerControl.jumpVelocity;
                 cPlayerControl.cPhysics->cPosition->isOnGround = false;
                 mSounds[SoundID::JUMP].play();
             }
@@ -221,7 +266,7 @@ ecs::Entity* Game::createPlayer()
 
 void Game::checkWin()
 {
-    if(mScore >= mLevel.getNumberOfPoints())
+    if(mScore >= mCurrentLevel->getNumberOfPoints())
     {
         mStatus = GameStatus::VICTORY;
         mSounds[SoundID::VICTORY].play();
@@ -232,20 +277,24 @@ ecs::Entity& Game::createEnemy(const sf::Vector2f& pos)
 {
     auto& entity(mManager.addEntity());
     entity.addComponent<CPosition>(pos);
-    int w{mLevel.getEnemyData().bRectOnSpriteSet.width};
-    int h{mLevel.getEnemyData().bRectOnSpriteSet.height};
-    entity.addComponent<CPhysics>(mLevel.getGravity(),sf::Vector2f(w,h));
+    int w{mCurrentLevel->getEnemyData()
+    .bRectOnSpriteSet.width};
+    int h{mCurrentLevel->getEnemyData()
+    .bRectOnSpriteSet.height};
+    entity.addComponent<CPhysics>(mCurrentLevel->getGravity(),sf::Vector2f(w,h));
     entity.addComponent<CAnimation>(this,
             mTextureManager.get(TextureID::SPRITE_SET),
-            mLevel.getEnemyData().bRectOnSpriteSet.left,
-            mLevel.getEnemyData().bRectOnSpriteSet.top,
-            0.1f, mLevel.getEnemyData().numFrames,
-            mLevel.getEnemyData().frameStep);
+            mCurrentLevel->getEnemyData()
+            .bRectOnSpriteSet.left,
+            mCurrentLevel->getEnemyData()
+            .bRectOnSpriteSet.top,
+            0.1f, mCurrentLevel->getEnemyData().numFrames,
+            mCurrentLevel->getEnemyData().frameStep);
     
     auto& cPhysics(entity.getComponent<CPhysics>());    
     
     int randDir = mRandom.nextBool() ? 1 : -1;
-    cPhysics.velocity.x = randDir * mLevel.getEnemyData().moveSpeed;
+    cPhysics.velocity.x = randDir * mCurrentLevel->getEnemyData().moveSpeed;
     
     cPhysics.moveFunc = [&cPhysics](float ft)
     {
@@ -256,8 +305,8 @@ ecs::Entity& Game::createEnemy(const sf::Vector2f& pos)
     
     cPhysics.onCollision = [&](bool axisX)
     {
-        auto& map = mLevel.getMap();
-        int tileSize = mLevel.getTileSize();
+        //auto& map = mLevel.getMap();
+        int tileSize = mCurrentLevel->getTileSize();
         
         //Enemy collisions logic
         
@@ -267,8 +316,8 @@ ecs::Entity& Game::createEnemy(const sf::Vector2f& pos)
             for (int x = cPhysics.left() / cPhysics.w();
                     x < cPhysics.right() /cPhysics.w(); ++x)
             {
-                if (map[y][x] == 'S' || map[y][x]=='0' ||
-                    map[y][x]=='r')
+                if (mMap[y][x] == 'S' || mMap[y][x]=='0' ||
+                    mMap[y][x]=='r')
                 {
                     if (axisX)
                     {
@@ -295,9 +344,7 @@ ecs::Entity& Game::createEnemy(const sf::Vector2f& pos)
 
 void Game::createEnemies()
 {
-    std::cout << "numEnemies = " << mLevel.getEnemyPositions().size() <<
-            std::endl;
-    for(const auto& pos: mLevel.getEnemyPositions())
+    for(const auto& pos: mCurrentLevel->getEnemyPositions())
         createEnemy(pos);
 }
 
@@ -309,10 +356,11 @@ void Game::handleCollisionPE(ecs::Entity& player, ecs::Entity& enemy) noexcept
     if(isIntersecting(pPhycics, ePhycics))
     {
         if(pPhycics.cPosition->isOnGround)
+        {
             mStatus = GameStatus::DEFEAT;
+        }
         else
-            enemy.destroy();
-            
+            enemy.destroy();            
     }
 }
 
@@ -337,42 +385,50 @@ void Game::processEvents()
         {
             mWindow.close();
         }
+        else if(event.type == sf::Event::KeyReleased)
+        {
+            switch(event.key.code)
+            {
+            case sf::Keyboard::Space:
+                togglePause();
+                break;
+            case sf::Keyboard::N:
+                prepareNewGame();
+                break;
+            case sf::Keyboard::Escape:
+                mWindow.close();
+                break;
+            default:
+                break;
+            }
+        }
     }
 }
 
 void Game::updatePhase(float time)
 {
-    mManager.refresh();
-    mManager.update(time);
-    
-    auto& players(mManager.getEntitiesByGroup(GPlayers));
-    auto& enemies(mManager.getEntitiesByGroup(GEnemies));
-    
-    for(auto& p: players)
+    if(mState == GameState::PLAY && mStatus == GameStatus::PLAY)
     {
-        for(auto& e: enemies)
-        {
-            handleCollisionPE(*p, *e);
-        }
-    }
-    
-   /* for(auto& e1: enemies)
-    {
-        for(auto& e2: enemies)
-        {
-            if(e1 != e2)
-                handleCollisionEE(*e1, *e2);
-        }
-    }*/
+        mManager.refresh();
+        mManager.update(time);
 
-    for(int i = 0; i < enemies.size(); ++i)
-    {
-        for(int j = i + 1; j < enemies.size(); ++j)
-            handleCollisionEE(*enemies[i], *enemies[j]);
+        auto& players(mManager.getEntitiesByGroup(GPlayers));
+        auto& enemies(mManager.getEntitiesByGroup(GEnemies));
+
+        for(auto& p: players)
+            for(auto& e: enemies)
+                handleCollisionPE(*p, *e);
+
+        for(std::size_t i{0u}; i < enemies.size(); ++i)
+        {
+            for(std::size_t j{i + 1}; j < enemies.size(); ++j)
+                handleCollisionEE(*enemies[i], *enemies[j]);
+        }
+
+        //Camera
+        
+        scrollCamera();
     }
-    
-    //Camera
-    scrollCamera();
 }
 
 void Game::renderPhase()
@@ -397,7 +453,16 @@ void Game::drawGameStatus()
     switch (mStatus)
     {
     case GameStatus::PLAY:
-        mStatusLabel.setString("");
+        if(mState == GameState::PAUSE)
+        {
+            mStatusLabel.setColor(sf::Color(72,0,255));
+            mStatusLabel.setString("GAME PAUSED");
+        }
+        else if(mState == GameState::PLAY)
+        {
+            mStatusLabel.setColor(sf::Color::Transparent);
+            mStatusLabel.setString("");
+        }
         break;
     case GameStatus::VICTORY:
         mStatusLabel.setColor(sf::Color::Green);
@@ -408,28 +473,29 @@ void Game::drawGameStatus()
         mStatusLabel.setString("YOU LOST!!!");
         break;
     }
-    int tx = (WINDOW_WIDTH - mStatusLabel.getGlobalBounds().width) / 2;
-    int ty = (WINDOW_HEIGHT - mStatusLabel.getGlobalBounds().height) / 2;
-    mStatusLabel.setPosition(tx, ty);
+    int tw = mStatusLabel.getGlobalBounds().width;
+    int th = mStatusLabel.getGlobalBounds().height;
+    int lx = (WINDOW_WIDTH - tw) / 2;
+    int ly = (WINDOW_HEIGHT - th) / 2 - th / 2;
+    mStatusLabel.setPosition(lx, ly);
     mWindow.draw(mStatusLabel);
 }
 
 void Game::drawMap()
 {
-    //Прорисовка карты
-    auto& map = mLevel.getMap();
-    for(std::size_t y{0u}; y < map.size(); ++y)
+    for(std::size_t y{0u}; y < mMap.size(); ++y)
     {
-        for (std::size_t x{0u}; x < map[y].size(); ++x)
+        for (std::size_t x{0u}; x < mMap[y].size(); ++x)
         {
-            if(map[y][x] == ' ' || map[y][x] == '0')
+            if(mMap[y][x] == ' ' || mMap[y][x] == '0')
                 continue;
-            auto it = mLevel.getTiles().find(map[y][x]);
-            if(it != mLevel.getTiles().cend())
+            auto it = mCurrentLevel->getTiles()
+            .find(mMap[y][x]);
+            if(it != mCurrentLevel->getTiles().cend())
             {
                 mTile.setTextureRect(it->second);
-                mTile.setPosition(x * mLevel.getTileSize() - mCamera.x,
-                                  y *  mLevel.getTileSize() - mCamera.y); 
+                mTile.setPosition(x * mCurrentLevel->getTileSize() - mCamera.x,
+                y *  mCurrentLevel->getTileSize() - mCamera.y); 
                 mWindow.draw(mTile);
             }
        }
@@ -440,21 +506,34 @@ void Game::scrollCamera()
 {
     if(mPlayer->getComponent<CPosition>().pos.x > WINDOW_WIDTH / 2 &&
        mPlayer->getComponent<CPosition>().pos.x <
-            mLevel.getMap()[0].size() * mLevel.getTileSize() - WINDOW_WIDTH / 2)
+            mMap[0].size() * mCurrentLevel->getTileSize() - WINDOW_WIDTH / 2)
     {
         mCamera.x = mPlayer->getComponent<CPosition>().pos.x - WINDOW_WIDTH / 2;
     }
+    
     if(mPlayer->getComponent<CPosition>().pos.y > WINDOW_HEIGHT / 2 &&
         mPlayer->getComponent<CPosition>().pos.y <
-            mLevel.getMap().size() * mLevel.getTileSize() - WINDOW_HEIGHT / 2)
+            mMap.size() * mCurrentLevel->getTileSize() -
+            WINDOW_HEIGHT / 2)
     {
         mCamera.y = mPlayer->getComponent<CPosition>().pos.y
                 - WINDOW_HEIGHT / 2;
     }
 }
 
-void Game::loadSounds()
+void Game::resetCamera()
 {
+    mCamera.x = 0;
+    mCamera.y = 0;
+}
+
+void Game::loadSoundsAndMusic()
+{
+    static const std::string PATH_TO_BGM{"resources/sounds/Mario_Theme.ogg"};
+    if(!mBGM.openFromFile(PATH_TO_BGM))
+        throw std::runtime_error("Could not load music file: " + PATH_TO_BGM);
+    mBGM.setLoop(true);
+    
     mSoundBufferManager.load(SoundID::JUMP, "resources/sounds/Jump.ogg");
     sf::Sound sound1(mSoundBufferManager.get(SoundID::JUMP));
     mSounds.insert({SoundID::JUMP, sound1});

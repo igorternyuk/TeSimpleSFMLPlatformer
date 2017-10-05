@@ -125,7 +125,8 @@ namespace ecs
         void addToGroup(Entity *entity, GroupID id);
         std::vector<Entity*>& getEntitiesByGroup(GroupID id);
         void refresh();
-        Entity& addEntity(); 
+        Entity& addEntity();
+        void destroyAll();
     private:
         std::vector<std::unique_ptr<Entity>> mEntities;
         std::array<std::vector<Entity*>, maxGroups> mGroupedEntities;

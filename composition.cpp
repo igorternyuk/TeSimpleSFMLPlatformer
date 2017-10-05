@@ -107,3 +107,12 @@ ecs::Entity& ecs::EntityManager::addEntity()
     mEntities.emplace_back(std::move(upEntity));
     return *pEntity;
 }
+
+void ecs::EntityManager::destroyAll()
+{
+    //std::vector<std::unique_ptr<Entity>> mEntities;
+    //std::array<std::vector<Entity*>, maxGroups> mGroupedEntities;
+    mEntities.clear();
+    for(auto& v: mGroupedEntities)
+        v.clear();
+}

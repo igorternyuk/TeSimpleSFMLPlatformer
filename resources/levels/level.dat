@@ -13,7 +13,7 @@ resources/gfx/MarioTileSet.png
 [Player move speed]
 90
 [PLayer jump velocity]
--210
+-230
 [Player map position]
 5 13
 [Enemy bounding rect on the sprite]
@@ -56,21 +56,21 @@ w 99 224 41 31
 #Rock
 r 111 112 16 16
 [Number of points]
-15
+35
 [Map]
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0                                                                                                                                                    0
 0                                                                                    w                                                     w         0
-0                   w                                  w                   w                       w                      c           c              0
+0                   w                                  w                   w   c                   w                c     c           c              0
 0                                      w                                       kk     c    c                        k   kkkk  k   k  kkkk            0
-0                                                                             k  k    kc  ck              w         k   k  k  k   k  k  k            0
-0                      c                                                      k      kkk  kkk  w                    k   kkkk  k   k  kkkk            0
-0                                                                       r     k       k    k                        k   k  k  k   k  k  k            0
-0                                                                      rr     k ck                               c  k   k  k   k k   k  k            0
-0                                                                     rrr      kk                                kkkk   k  k    k    k  k    rr      0
-0               c    kckck                                           rrrr                         r                                          rr      0
-0                                      t0                           rrrrr                         rr        t0                               rr      0
+0     w                                                                       k  k    kc  ck              w         k   k  k  k   k  k  k            0
+0                      c                                                c     k      kkk  kkk  w                    k   kkkk  k   k  kkkk            0
+0                                                                       r     k       k    k                        k   k  k  kc  k  k  k            0
+0                                                                      rr     k ck                               c  k   k  k   kck   k  k    c       0
+0                                                                     rrr      kk                 c              kkkk   k  k    k    k  k    rr      0
+0               c    kckck             c                             rrrr                         r         c                                rr      0
+0                                      t0              c            rrrrr                         rr        t0                               rr      0
 0G                                     00              t0          rrrrrr            G            rrr       00                               rr      0
-0           d    g       d             00              00         rrrrrrrc                        rrrrr     00                               rrc    c0
+0           d    g       d            c00c            c00c       crrrrrrrc                       crrrrrc   c00c                             crrc    c0
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
