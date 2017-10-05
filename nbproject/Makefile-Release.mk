@@ -45,7 +45,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/components/CPosition.o \
 	${OBJECTDIR}/components/CStaticImage.o \
 	${OBJECTDIR}/composition.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/random.o
 
 
 # C Compiler Flags
@@ -126,6 +127,11 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/random.o: random.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/random.o random.cpp
 
 # Subprojects
 .build-subprojects:

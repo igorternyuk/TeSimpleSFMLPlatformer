@@ -23,15 +23,4 @@ void components::CPhysics::init()
 void components::CPhysics::update(float frameTime)
 {
     moveFunc(frameTime);
-    /*cPosition->pos.x += velocity.x * frameTime;
-    //Check collision with respect to X-axis
-    onCollision(true);
-    if(!cPosition->isOnGround())
-    {
-        velocity.y += gravity * frameTime;
-    }
-    cPosition->pos.y += velocity.y * frameTime;
-    cPosition->isOnGround = false;
-    //Check collision with respect to Y-axis
-    onCollision(false);*/
 }

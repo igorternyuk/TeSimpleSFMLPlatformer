@@ -38,6 +38,7 @@ bool Level::loadFromFile(const std::string &fileName)
         ENEMY_JUMP_VELOCITY,
         ENEMY_MAP_POSITIONS,
         TILES,
+        NUMBER_OF_POINTS,
         MAP       
     };
 
@@ -137,6 +138,10 @@ bool Level::loadFromFile(const std::string &fileName)
                 ls = LoadState::TILES;
                 continue;
             }
+            else if(line == "[Number of points]")
+            {
+                ls = LoadState::NUMBER_OF_POINTS;
+            }
             else if(line == "[Map]")
             {
                 ls = LoadState::MAP;
@@ -230,6 +235,9 @@ bool Level::loadFromFile(const std::string &fileName)
                 ss >> key >> tileRect.left >> tileRect.top >> tileRect.width >>
                 tileRect.height;
                 mTiles.insert({key, tileRect});
+                break;
+            case LoadState::NUMBER_OF_POINTS:
+                mNumPoins = std::atoi(line.c_str());
                 break;
             case LoadState::MAP :
                 mMap.push_back(line);

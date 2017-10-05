@@ -29,7 +29,7 @@ public:
     Level& operator=(const Level&) = delete;
     Level& operator=(Level&&) = delete;
     virtual ~Level();
-    bool loadFromFile(const std::string &fileName); // Загрузить вcе данные об уровне
+    bool loadFromFile(const std::string &fileName);
     inline const std::string& getPathToSpriteSet() const noexcept
     {
         return mPathToImage;
@@ -54,15 +54,15 @@ public:
     inline const EntityData& getEnemyData() const noexcept
     { 
         return mEnemyData;
-    }
-    
+    }   
+
+    inline const auto& getTiles() const noexcept { return mTiles; }
+    inline auto getNumberOfPoints() const noexcept { return mNumPoins; }
     inline const std::vector<std::string>& getMap() const { return mMap; }
     inline std::vector<std::string>& getMap() { return mMap; }
-    inline const auto& getTiles() const noexcept { return mTiles; }
    
-
-    
 private:
+    
     std::string mPathToImage;
     int mTileSize;
     float mGravity;
@@ -70,6 +70,7 @@ private:
     sf::Vector2f mMarioPosition;
     std::vector<sf::Vector2f> mEnemyPositions;
     std::map<char, sf::IntRect> mTiles;
+    int mNumPoins;
     std::vector<std::string> mMap;
 };
 

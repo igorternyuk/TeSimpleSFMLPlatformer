@@ -85,7 +85,7 @@ void components::CAnimation::update(float frameTime)
             else
             {
                 sprite.setTextureRect(destFaceLeft);
-               isLastDirRight = false;
+                isLastDirRight = false;
             }
         }
     //}

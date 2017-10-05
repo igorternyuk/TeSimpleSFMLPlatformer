@@ -13,23 +13,29 @@ resources/gfx/MarioTileSet.png
 [Player move speed]
 90
 [PLayer jump velocity]
--200
+-210
 [Player map position]
 5 13
 [Enemy bounding rect on the sprite]
 0 0 16 16
 [Enemy number of frames]
-2
+3
 [Enemy frame step]
-1
+18
 [Enemy move speed]
-100
+50
 [Enemy jump velocity]
 0
 [Enemy map positions]
+28 13
+32 13
 38 13
 43 13
 75 13
+115 13
+120 13
+125 13
+130 13
 [Tiles]
 #Stone
 S 95 112 16 16
@@ -49,6 +55,8 @@ d 0 106 74 21
 w 99 224 41 31
 #Rock
 r 111 112 16 16
+[Number of points]
+15
 [Map]
 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0                                                                                                                                                    0
@@ -59,10 +67,10 @@ r 111 112 16 16
 0                      c                                                      k      kkk  kkk  w                    k   kkkk  k   k  kkkk            0
 0                                                                       r     k       k    k                        k   k  k  k   k  k  k            0
 0                                                                      rr     k ck                               c  k   k  k   k k   k  k            0
-0                                                                     rrr      kk                                kkkk   k  k    k    k  k            0
-0               c    kckck                                           rrrr                         r                                                  0
-0                                      t0                           rrrrr                         rr        t0                               00      0
-0G                                     00              t0          rrrrrr            G            rrr       00                               00      0
-0           d    g       d             00              00         rrrrrrrc                        rrrrr     00                               00c    c0
+0                                                                     rrr      kk                                kkkk   k  k    k    k  k    rr      0
+0               c    kckck                                           rrrr                         r                                          rr      0
+0                                      t0                           rrrrr                         rr        t0                               rr      0
+0G                                     00              t0          rrrrrr            G            rrr       00                               rr      0
+0           d    g       d             00              00         rrrrrrrc                        rrrrr     00                               rrc    c0
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

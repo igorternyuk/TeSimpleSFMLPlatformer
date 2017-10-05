@@ -15,7 +15,7 @@ namespace components
 {
     struct CPosition: ecs::Component {
         sf::Vector2f pos;
-        bool isOnGround{false};
+        bool isOnGround{true};
         CPosition() = default;
         CPosition(const CPosition&) = default;
         CPosition(CPosition&&) = default;
